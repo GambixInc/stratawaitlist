@@ -124,9 +124,11 @@ const Index = () => {
 
           {/* Social Proof */}
           <div className="mt-20">
-            <p className="text-lg mb-8">Secure and Trusted by Techstars, gener8tor, BET, NFLPA</p>
             <div className="flex justify-center gap-8 grayscale hover:grayscale-0 transition-all">
-              {/* Add partner logos here */}
+              <img src="/lovable-uploads/9e487b62-b95a-4dfc-92b1-278d918aaf64.png" alt="Techstars" className="h-12 object-contain" />
+              <img src="/lovable-uploads/3b8bd150-b94d-4a7a-82f0-bedb6deedc0e.png" alt="gener8tor" className="h-12 object-contain" />
+              <img src="/lovable-uploads/73777373-4933-4d2e-bf59-185ac6a247b5.png" alt="BET" className="h-12 object-contain" />
+              <img src="/lovable-uploads/8798da5a-aca5-4fcc-b348-8bfbbb801b2c.png" alt="NFLPA" className="h-12 object-contain" />
             </div>
           </div>
         </div>

@@ -17,7 +17,7 @@ export const WaitlistForm = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...` // Your API key
+          'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiZjI1MzBkMzFlOWJjMmJlY2Y1MWM4Y2FmNDUzZmEzMzE2ZjE1OGIzYjJjMDE2ZDI3M2EyMDE1MDNlYWViMzlkODkyNjIyMGFkODdmODRmYWQiLCJpYXQiOjE3MzM0MzA4NTEuODMzOTE5LCJuYmYiOjE3MzM0MzA4NTEuODMzOTIyLCJleHAiOjQ4ODkxMDQ0NTEuODI5MjUxLCJzdWIiOiI2NzY0MTciLCJzY29wZXMiOltdfQ.hd_7BSSBN2ycoca7lp7FpRsk7jKfUTt6BkBwDCMrLuRr6IgaAd-H2dmue0H9iH5xleGu2-Fi-SKnZUzUgoVJSD0AGxkyXNr7owPMz8rSi6A1PiLMNwKq8JzRE1se_nM0opJ_qr1YGoz46ahZUQB89Wy8y0aQJhwZ9XBFcHIKPYhOCXlsQ8VX-c1naibi9HRAYffBDdszFMULuYUN3JUYyCh5uBbXi_ygvu8bRjQSXpwTAsrjRbgEUFNy_FIJIZJfI-RhQ0p-s9e4auEzBKyT9c9cMgbpdzv3GMQ3y-iLEKm7yzxYHsoSkNJ61aL_XGgXAfGBEJA9-hAPWGc5q6EztQIMvWVI72N7Nz0rNm3QcHOKe8Gp0nThJj1bhDHjLsUZQPl4t8kYI0Cm_4V19LK4YnAZ2Z2CVj1Ym2q0ffsLjnYMKqF0fGgjZKh9xMJXznvwcDpHPvbjdSdwkNhQgVl1Ke5gaJK7BQaE1CwBtQKVJYUlB-qBZMrwtUuc-3LqP9KuGnH3xaIIG5E6Zs58nrm-4emqDVBa370RLhSVEL97FAzLMjOYmBhUKokOIo56A5UzArrg2yQ9r6cXVxZPQWFaavHQLwUzLkFe6PVelRlDPBuctjKmcWIOSGT3_5TgsRA6RJRby0XyJ2etZjkA_6Jh7gLCq2OIjKQ5snDdZa4wgYM`
         },
         body: JSON.stringify({
           email: email,
