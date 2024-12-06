@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 const Index = () => {
   const shareContent = {
-    text: "Join the future of website optimization with Gambix! Get early access now.",
+    text: "Strata is revolutionizing UX optimization with AI! 🚀 Be among the first to experience the future of web and app design. Join the waitlist now: www.strata.cx",
     url: window.location.href
   };
 
@@ -23,6 +23,9 @@ const Index = () => {
         break;
       case 'linkedin':
         window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareContent.url)}`);
+        break;
+      case 'facebook':
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareContent.url)}`);
         break;
       default:
         try {
@@ -75,7 +78,7 @@ const Index = () => {
       <main className="container mx-auto px-4 pt-20 pb-32">
         <div className="max-w-3xl mx-auto text-center space-y-20">
           {/* Early Access Badge */}
-          <div className="inline-block px-4 py-2 bg-white/10 rounded-full text-sm">
+          <div className="inline-block px-4 py-2 bg-white/10 backdrop-blur-lg rounded-full text-sm">
             Early access available from Jan 1, 2025
           </div>
 
@@ -93,7 +96,12 @@ const Index = () => {
           </div>
 
           {/* Waitlist Form */}
-          <WaitlistForm />
+          <div className="relative">
+            <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-3xl" />
+            <div className="relative p-8">
+              <WaitlistForm />
+            </div>
+          </div>
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
@@ -130,22 +138,32 @@ const Index = () => {
           <div className="flex gap-4">
             <AlertDialog>
               <AlertDialogTrigger className="hover:text-white/70">Privacy Policy</AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className="max-w-2xl">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Privacy Policy</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information.
+                  <AlertDialogDescription className="text-left whitespace-pre-wrap">
+                    {`Privacy Policy
+
+Last updated: 12/5/2024
+
+Introduction
+Gambix ("we," "us," or "our") is committed to protecting your privacy...`}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
               </AlertDialogContent>
             </AlertDialog>
             <AlertDialog>
               <AlertDialogTrigger className="hover:text-white/70">Terms of Service</AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className="max-w-2xl">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Terms of Service</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    By using our service, you agree to these terms and conditions.
+                  <AlertDialogDescription className="text-left whitespace-pre-wrap">
+                    {`Terms of Service
+
+Last updated: 12/5/2024
+
+Acceptance of Terms
+By accessing our website...`}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
               </AlertDialogContent>
@@ -157,7 +175,7 @@ const Index = () => {
 
       {/* reCAPTCHA */}
       <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-      <div className="g-recaptcha" data-sitekey="YOUR_SITE_KEY"></div>
+      <div className="g-recaptcha" data-sitekey="6LfNkJMqAAAAAMmPz-okXEAO4CvzpA7OF65wk_cE"></div>
     </div>
   );
 };

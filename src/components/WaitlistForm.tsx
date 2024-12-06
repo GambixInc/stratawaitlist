@@ -12,22 +12,45 @@ export const WaitlistForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const response = await fetch('https://connect.mailerlite.com/api/subscribers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...` // Your API key
+        },
+        body: JSON.stringify({
+          email: email,
+          fields: {
+            name: name
+          }
+        })
+      });
 
-    toast({
-      title: "Success!",
-      description: "You've been added to our waitlist. We'll be in touch soon!",
-    });
-
-    setName("");
-    setEmail("");
-    setIsSubmitting(false);
+      if (response.ok) {
+        toast({
+          title: "Success!",
+          description: "You've been added to our waitlist. We'll be in touch soon!",
+        });
+        setName("");
+        setEmail("");
+      } else {
+        throw new Error('Failed to subscribe');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-4 max-w-3xl mx-auto">
-      <div className="flex-1 flex gap-4 p-2 bg-white/5 rounded-full">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="flex gap-4 p-2 bg-white/5 backdrop-blur-sm rounded-full">
         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-500" />
         <Input
           required
@@ -45,14 +68,15 @@ export const WaitlistForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           className="flex-1 border-0 bg-transparent text-white placeholder:text-white/50 focus-visible:ring-0"
         />
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="px-8 rounded-full bg-white/10 hover:bg-white/20 text-white"
+        >
+          Join Now
+        </Button>
       </div>
-      <Button
-        type="submit"
-        disabled={isSubmitting}
-        className="px-8 rounded-full bg-white/10 hover:bg-white/20 text-white"
-      >
-        Join Now
-      </Button>
+      <div className="g-recaptcha" data-sitekey="6LfNkJMqAAAAAMmPz-okXEAO4CvzpA7OF65wk_cE"></div>
     </form>
   );
 };
