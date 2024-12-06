@@ -1,84 +1,86 @@
-import { Brain, ChartBar, Lightbulb } from "lucide-react";
+import { Share } from "lucide-react";
 import { WaitlistForm } from "@/components/WaitlistForm";
-import { FeatureCard } from "@/components/FeatureCard";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-dark text-white">
+    <div className="min-h-screen bg-[#0A0A0A] text-white">
       {/* Header */}
       <header className="container mx-auto py-6 px-4">
         <div className="flex justify-between items-center">
-          <img src="/lovable-uploads/7c3c2b6a-e7c5-4012-8c44-fd1f26f23e55.png" alt="Strata Logo" className="h-10" />
-          <nav className="space-x-6">
-            <a href="#features" className="text-white/70 hover:text-white transition-colors">
-              Features
-            </a>
-            <a href="#about" className="text-white/70 hover:text-white transition-colors">
-              About
-            </a>
-          </nav>
+          <div className="text-2xl font-bold tracking-wider">STUDIO AI</div>
+          <div className="flex items-center gap-4">
+            <button className="flex items-center gap-2 text-white/70 hover:text-white transition-colors">
+              <Share className="w-4 h-4" />
+              Share
+            </button>
+            <button className="px-4 py-2 text-white/70 hover:text-white transition-colors">
+              Login
+            </button>
+            <button className="px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+              Join Waitlist →
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-          Revolutionize Your UX Design with AI-Powered Insights
-        </h1>
-        <p className="text-xl md:text-2xl text-secondary mb-12 max-w-2xl mx-auto">
-          Join the waitlist and get exclusive early access to the ultimate UX optimization platform
-        </p>
-        <WaitlistForm />
-      </section>
-
-      {/* Features Grid */}
-      <section id="features" className="container mx-auto px-4 py-20">
-        <div className="grid md:grid-cols-3 gap-8">
-          <FeatureCard
-            icon={Brain}
-            title="AI-Powered Content Generation"
-            description="Create compelling UX content with advanced AI assistance"
-          />
-          <FeatureCard
-            icon={ChartBar}
-            title="Real-Time User Analytics"
-            description="Track and analyze user behavior with detailed insights"
-          />
-          <FeatureCard
-            icon={Lightbulb}
-            title="Expert UX Recommendations"
-            description="Get AI-driven suggestions to optimize your design"
-          />
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="container mx-auto px-4 py-20 text-center">
-        <p className="text-secondary-muted mb-8">Secure and Trusted by</p>
-        <div className="flex justify-center items-center space-x-8 opacity-50 hover:opacity-100 transition-opacity">
-          <span className="text-xl font-semibold">Techstars</span>
-          <span className="text-xl font-semibold">gener8tor</span>
-          <span className="text-xl font-semibold">BET</span>
-          <span className="text-xl font-semibold">NFLPA</span>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="container mx-auto px-4 py-8 border-t border-white/10">
-        <div className="flex flex-col md:flex-row justify-between items-center text-sm text-secondary-muted">
-          <div className="space-x-4">
-            <a href="/privacy" className="hover:text-white transition-colors">
-              Privacy Policy
-            </a>
-            <a href="/terms" className="hover:text-white transition-colors">
-              Terms of Service
-            </a>
+      {/* Main Content */}
+      <main className="container mx-auto px-4 pt-20 pb-32">
+        <div className="max-w-3xl mx-auto text-center space-y-20">
+          {/* Early Access Badge */}
+          <div className="inline-block px-4 py-2 bg-white/10 rounded-full text-sm">
+            Early access available from May 1, 2023
           </div>
-          <p className="mt-4 md:mt-0">
-            © 2024 Strata Inc. All rights reserved.
+
+          {/* Hero Section */}
+          <div className="space-y-8">
+            <div className="relative">
+              <div className="absolute -left-8 top-1/2 -translate-y-1/2 w-1 h-20 bg-gradient-to-b from-pink-500 to-purple-500" />
+              <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
+                Early Access
+              </h1>
+            </div>
+            <p className="text-xl text-white/70">
+              Welcome to <span className="text-white">the future of web design</span>. Get Early Access.
+            </p>
+          </div>
+
+          {/* Waitlist Form */}
+          <WaitlistForm />
+
+          {/* Terms */}
+          <p className="text-sm text-white/50">
+            This site is protected by reCAPTCHA and the{" "}
+            <a href="#" className="underline hover:text-white/70">
+              Google Privacy Policy
+            </a>{" "}
+            and{" "}
+            <a href="#" className="underline hover:text-white/70">
+              Terms of Service
+            </a>{" "}
+            apply.
           </p>
         </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="container mx-auto px-4 py-6">
+        <div className="flex justify-between items-center text-white/50 text-sm">
+          <a href="#" className="hover:text-white/70">
+            @studio
+          </a>
+          <p>©2023 STUDIO Inc. All Rights Reserved.</p>
+        </div>
       </footer>
+
+      {/* Product Hunt Badge */}
+      <div className="fixed bottom-4 right-4">
+        <a
+          href="#"
+          className="flex items-center gap-2 px-4 py-2 bg-white rounded-full text-black text-sm font-medium hover:bg-white/90 transition-colors"
+        >
+          🏆 #1 Product of the Week
+        </a>
+      </div>
     </div>
   );
 };

@@ -26,35 +26,33 @@ export const WaitlistForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
-      <div className="space-y-2">
+    <form onSubmit={handleSubmit} className="flex gap-4 max-w-3xl mx-auto">
+      <div className="flex-1 flex gap-4 p-2 bg-white/5 rounded-full">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-500" />
         <Input
           required
           type="text"
-          placeholder="Your full name"
+          placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+          className="flex-1 border-0 bg-transparent text-white placeholder:text-white/50 focus-visible:ring-0"
         />
         <Input
           required
           type="email"
-          placeholder="work@email.com"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+          className="flex-1 border-0 bg-transparent text-white placeholder:text-white/50 focus-visible:ring-0"
         />
       </div>
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-primary hover:bg-primary-hover text-white font-semibold py-6"
+        className="px-8 rounded-full bg-white/10 hover:bg-white/20 text-white"
       >
-        {isSubmitting ? "Joining..." : "Join Waitlist"}
+        Join Now
       </Button>
-      <p className="text-secondary-muted text-sm text-center">
-        Early access starts September 2023
-      </p>
     </form>
   );
 };
