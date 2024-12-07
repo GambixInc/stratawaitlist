@@ -2,17 +2,50 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BarChart3, Zap, LineChart, TrendingUp, ArrowRight } from "lucide-react";
+import { BarChart3, Zap, LineChart, TrendingUp, ArrowRight, DollarSign } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 export const Login = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically handle the login logic
-    navigate('/dashboard');
+    setIsLoading(true);
+
+    try {
+      // Check if user exists in waitlist
+      const { data, error } = await supabase
+        .from("waitlist")
+        .select()
+        .eq("email", email)
+        .eq("full_name", fullName)
+        .single();
+
+      if (error || !data) {
+        toast({
+          variant: "destructive",
+          title: "Access Denied",
+          description: "Please join our waitlist first to gain access.",
+        });
+        navigate('/');
+        return;
+      }
+
+      navigate('/dashboard');
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -48,6 +81,7 @@ export const Login = () => {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className="bg-white/5 border-white/10 text-white placeholder:text-white/50"
+                  required
                 />
               </div>
               <div>
@@ -57,13 +91,15 @@ export const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="bg-white/5 border-white/10 text-white placeholder:text-white/50"
+                  required
                 />
               </div>
               <Button 
                 type="submit"
                 className="w-full bg-[#e57c73] hover:bg-[#e57c73]/90 text-white"
+                disabled={isLoading}
               >
-                Get Started
+                {isLoading ? "Checking..." : "Get Started"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
@@ -72,17 +108,17 @@ export const Login = () => {
           {/* Features */}
           <div className="space-y-8">
             <h3 className="text-2xl font-bold text-white mb-8">
-              Optimize Your Website with AI-Powered Analytics
+              Maximize Revenue & Reduce Costs with AI-Powered Analytics
             </h3>
             
             <div className="grid gap-6">
               <div className="flex items-start gap-4 p-4 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10">
                 <div className="p-2 bg-[#e57c73]/10 rounded-lg">
-                  <BarChart3 className="h-6 w-6 text-[#e57c73]" />
+                  <DollarSign className="h-6 w-6 text-[#e57c73]" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">Real-time Analytics</h4>
-                  <p className="text-white/70">Track user behavior and engagement metrics in real-time with our advanced dashboard.</p>
+                  <h4 className="text-lg font-semibold text-white mb-2">Increase Revenue by 30%</h4>
+                  <p className="text-white/70">Our AI-driven insights help optimize conversion rates and boost your bottom line.</p>
                 </div>
               </div>
 
@@ -91,8 +127,8 @@ export const Login = () => {
                   <Zap className="h-6 w-6 text-[#e57c73]" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">AI-Powered Insights</h4>
-                  <p className="text-white/70">Get intelligent recommendations to optimize your website's performance.</p>
+                  <h4 className="text-lg font-semibold text-white mb-2">Cut Costs by 40%</h4>
+                  <p className="text-white/70">Automate optimization and reduce manual analysis costs with our AI platform.</p>
                 </div>
               </div>
 
@@ -101,15 +137,15 @@ export const Login = () => {
                   <LineChart className="h-6 w-6 text-[#e57c73]" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">Performance Metrics</h4>
-                  <p className="text-white/70">Monitor key metrics and track your website's growth over time.</p>
+                  <h4 className="text-lg font-semibold text-white mb-2">ROI Analytics</h4>
+                  <p className="text-white/70">Track your investment returns with real-time performance metrics.</p>
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-[#e57c73]/20 to-purple-500/20 rounded-xl border border-white/10">
               <TrendingUp className="h-8 w-8 text-[#e57c73]" />
-              <p className="text-lg font-medium text-white">Join thousands of websites already optimizing with our platform</p>
+              <p className="text-lg font-medium text-white">Join thousands of businesses already saving $10k+ monthly with our platform</p>
             </div>
           </div>
         </div>

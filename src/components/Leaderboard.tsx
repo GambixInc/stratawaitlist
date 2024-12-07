@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
-import { Trophy, Crown } from "lucide-react";
+import { Trophy, Crown, X } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
+import { useState } from "react";
+import { Button } from "./ui/button";
 
 export type LeaderboardEntry = {
   id: string;
@@ -13,6 +15,7 @@ export type LeaderboardEntry = {
 };
 
 export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
+  const [isVisible, setIsVisible] = useState(true);
   const { data: leaderboard, isLoading } = useQuery({
     queryKey: ["leaderboard"],
     queryFn: async () => {
@@ -26,6 +29,18 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
       return data as LeaderboardEntry[];
     },
   });
+
+  if (!isVisible) {
+    return (
+      <Button
+        onClick={() => setIsVisible(true)}
+        className="w-full bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white"
+      >
+        <Trophy className="w-4 h-4 mr-2" />
+        Show Leaderboard
+      </Button>
+    );
+  }
 
   if (isLoading) {
     return <div className="text-center p-4">Loading leaderboard...</div>;
@@ -44,9 +59,19 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
 
   return (
     <div className="w-full max-w-md mx-auto bg-white/10 backdrop-blur-lg rounded-xl p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Trophy className="w-6 h-6 text-yellow-400" />
-        <h3 className="text-xl font-semibold">Top Referrers</h3>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Trophy className="w-6 h-6 text-yellow-400" />
+          <h3 className="text-xl font-semibold">Top Referrers</h3>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsVisible(false)}
+          className="hover:bg-white/10"
+        >
+          <X className="w-4 h-4" />
+        </Button>
       </div>
       
       <ScrollArea className="h-[300px] rounded-md">
