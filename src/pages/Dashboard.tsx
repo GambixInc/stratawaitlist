@@ -8,7 +8,7 @@ const Dashboard = () => {
       <Header />
       
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-[#e57c73] to-purple-500 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold mb-8 text-center text-[#e57c73]">
           Welcome Back!
         </h1>
         

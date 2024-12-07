@@ -52,7 +52,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
   return (
     <div className="bg-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/10">
-      <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-[#e57c73] to-purple-500 bg-clip-text text-transparent">
+      <h2 className="text-3xl font-bold mb-6 text-[#e57c73]">
         Welcome Back
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">

@@ -36,7 +36,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
         onClick={() => setIsVisible(true)}
         className="w-full bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white"
       >
-        <Trophy className="w-4 h-4 mr-2" />
+        <Trophy className="w-4 h-4 mr-2 text-[#e57c73]" />
         Show Leaderboard
       </Button>
     );
@@ -47,21 +47,14 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
   }
 
   const getTierColor = (tier: number) => {
-    switch (tier) {
-      case 3:
-        return "text-yellow-400";
-      case 2:
-        return "text-purple-400";
-      default:
-        return "text-blue-400";
-    }
+    return "text-[#e57c73]";
   };
 
   return (
     <div className="w-full max-w-md mx-auto bg-white/10 backdrop-blur-lg rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Trophy className="w-6 h-6 text-yellow-400" />
+          <Trophy className="w-6 h-6 text-[#e57c73]" />
           <h3 className="text-xl font-semibold">Top Referrers</h3>
         </div>
         <Button
@@ -82,7 +75,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
               className={cn(
                 "flex items-center justify-between p-3 rounded-lg transition-colors",
                 entry.id === currentUserId
-                  ? "bg-primary/20 border border-primary/30"
+                  ? "bg-[#e57c73]/20 border border-[#e57c73]/30"
                   : "bg-white/5 hover:bg-white/10"
               )}
             >
@@ -92,7 +85,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="font-medium">{entry.full_name}</span>
-                  <Crown className={cn("w-4 h-4", getTierColor(entry.tier_level))} />
+                  <Crown className={cn("w-4 h-4 text-[#e57c73]")} />
                 </div>
               </div>
               <span className="text-sm bg-white/10 px-2 py-1 rounded">
