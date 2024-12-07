@@ -90,7 +90,7 @@ const Index = () => {
         <div className="max-w-3xl mx-auto text-center space-y-10 md:space-y-20">
           {/* Early Access Badge */}
           <div className="inline-block px-3 md:px-4 py-1.5 md:py-2 bg-white/10 backdrop-blur-lg rounded-full text-xs md:text-sm">
-            Early access available from Jan 1, 2025
+            Early access available from Jan 25, 2025
           </div>
 
           {/* Hero Section */}
