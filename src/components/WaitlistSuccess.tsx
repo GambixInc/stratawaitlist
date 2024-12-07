@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { CountdownTimer } from "./CountdownTimer";
 import { RewardsProgress } from "./RewardsProgress";
 import { Share } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 interface WaitlistSuccessProps {
   userId: string;
@@ -12,7 +13,27 @@ interface WaitlistSuccessProps {
 
 export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
   const [referralLink] = useState(`${window.location.origin}/?ref=${userId}`);
+  const [referralCount, setReferralCount] = useState(0);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchReferralCount = async () => {
+      const { data, error } = await supabase
+        .from("waitlist")
+        .select("referral_count")
+        .eq("id", userId)
+        .single();
+
+      if (error) {
+        console.error("Error fetching referral count:", error);
+        return;
+      }
+
+      setReferralCount(data.referral_count || 0);
+    };
+
+    fetchReferralCount();
+  }, [userId]);
 
   const handleShare = async (platform: 'twitter' | 'facebook' | 'linkedin' | 'instagram' | 'copy') => {
     const shareUrl = referralLink;
@@ -76,7 +97,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
           </div>
         )}
 
-        <RewardsProgress />
+        <RewardsProgress referralCount={referralCount} />
       </div>
     </div>
   );
