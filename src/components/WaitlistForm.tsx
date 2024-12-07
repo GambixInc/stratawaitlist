@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { toast } from "./ui/use-toast";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 
 export const WaitlistForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,10 +30,7 @@ export const WaitlistForm = () => {
       });
 
       if (response.ok) {
-        toast({
-          title: "Success!",
-          description: "You've been added to our waitlist. We'll be in touch soon!",
-        });
+        setShowConfirmation(true);
         setName("");
         setEmail("");
       } else {
@@ -49,34 +48,48 @@ export const WaitlistForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="flex gap-4 p-2 bg-white/5 backdrop-blur-sm rounded-full">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-500" />
-        <Input
-          required
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="flex-1 border-0 bg-transparent text-white placeholder:text-white/50 focus-visible:ring-0"
-        />
-        <Input
-          required
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="flex-1 border-0 bg-transparent text-white placeholder:text-white/50 focus-visible:ring-0"
-        />
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-8 rounded-full bg-white/10 hover:bg-white/20 text-white"
-        >
-          Join Now
-        </Button>
-      </div>
-      <div className="g-recaptcha" data-sitekey="6LfNkJMqAAAAAMmPz-okXEAO4CvzpA7OF65wk_cE"></div>
-    </form>
+    <>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex flex-col gap-4 p-2 bg-white/5 backdrop-blur-sm rounded-full">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#e57c73] to-[#e57c73]/70" />
+          <Input
+            required
+            type="text"
+            placeholder="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="flex-1 border-0 bg-transparent text-white placeholder:text-white/50 focus-visible:ring-0"
+            autoFocus
+          />
+          <Input
+            required
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="flex-1 border-0 bg-transparent text-white placeholder:text-white/50 focus-visible:ring-0"
+          />
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="px-8 rounded-full bg-[#e57c73] hover:bg-[#e57c73]/90 text-white"
+          >
+            Join Now
+          </Button>
+        </div>
+        <div className="g-recaptcha" data-sitekey="6LfNkJMqAAAAAMmPz-okXEAO4CvzpA7OF65wk_cE"></div>
+      </form>
+
+      <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Thank you for joining!</DialogTitle>
+            <DialogDescription>
+              Share with your network to move up the waitlist and get earlier access!
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
