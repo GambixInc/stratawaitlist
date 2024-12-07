@@ -4,8 +4,11 @@ import { FeatureCard } from "@/components/FeatureCard";
 import { PolicyDialogs } from "@/components/PolicyDialogs";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
+  const navigate = useNavigate();
   const shareContent = {
     text: "I have just joined the waitlist to be apart of the future of the web. You should join too!",
     url: window.location.href
@@ -47,7 +50,13 @@ const Index = () => {
             alt="Gambix" 
             className="h-12 md:h-20" 
           />
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => navigate('/login')}
+              className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white"
+            >
+              Login
+            </Button>
             <Popover>
               <PopoverTrigger asChild>
                 <button className="flex items-center gap-1 md:gap-2 text-sm md:text-base text-white hover:text-[#e57c73] transition-colors">
