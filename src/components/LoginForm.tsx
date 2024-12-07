@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
-export const LoginForm = () => {
+export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +35,9 @@ export const LoginForm = () => {
         return;
       }
 
+      if (onSuccess) {
+        onSuccess();
+      }
       navigate('/dashboard');
     } catch (error) {
       toast({

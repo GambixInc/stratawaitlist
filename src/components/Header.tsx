@@ -2,9 +2,13 @@ import { Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { LoginForm } from "./LoginForm";
+import { Dialog, DialogContent } from "./ui/dialog";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [showLoginForm, setShowLoginForm] = useState(false);
   
   const handleShare = async (platform: string) => {
     const shareContent = {
@@ -31,26 +35,22 @@ const Header = () => {
     }
   };
 
-  const handleReload = () => {
-    window.location.reload();
-  };
-
   return (
     <header className="container mx-auto py-4 md:py-6 px-4">
       <div className="flex justify-between items-center">
         <button 
-          onClick={handleReload}
+          onClick={() => navigate('/')}
           className="hover:opacity-80 transition-opacity"
         >
           <img 
-            src="/lovable-uploads/12218a5c-e6d1-4914-9dd8-943f5a6528e0.png" 
+            src="/lovable-uploads/0e88fe57-f24d-470f-bd94-1e8a284f5c77.png" 
             alt="Gambix" 
-            className="h-12 md:h-20" 
+            className="h-16" 
           />
         </button>
         <div className="flex items-center gap-4">
           <Button
-            onClick={() => navigate('/login')}
+            onClick={() => setShowLoginForm(true)}
             className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white"
           >
             Login
@@ -81,6 +81,14 @@ const Header = () => {
           </Popover>
         </div>
       </div>
+
+      <Dialog open={showLoginForm} onOpenChange={setShowLoginForm}>
+        <DialogContent className="bg-black border-[#e57c73] text-white">
+          <div className="p-6">
+            <LoginForm onSuccess={() => setShowLoginForm(false)} />
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };
