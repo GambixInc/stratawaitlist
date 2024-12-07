@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Leaderboard } from "./Leaderboard";
 import { supabase } from "@/lib/supabase";
-import { Share2, Facebook, Twitter } from "lucide-react";
+import { Share2, Facebook, Linkedin, Instagram, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { RewardsProgress } from "./RewardsProgress";
@@ -47,6 +47,17 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
       case 'facebook':
         window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`);
         break;
+      case 'linkedin':
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`);
+        break;
+      case 'instagram':
+        // Since Instagram doesn't have a direct share URL, we'll copy the link
+        await navigator.clipboard.writeText(shareUrl);
+        toast({
+          title: "Link copied!",
+          description: "Share it on Instagram with your friends.",
+        });
+        break;
       default:
         try {
           await navigator.share({
@@ -91,24 +102,38 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
                 Share
               </Button>
             </div>
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex items-center justify-center gap-4 mt-4">
               <Button
                 onClick={() => handleShare('facebook')}
-                variant="outline"
-                size="sm"
-                className="gap-2"
+                variant="ghost"
+                size="icon"
+                className="bg-white/5 hover:bg-white/10 backdrop-blur-lg"
               >
-                <Facebook className="w-4 h-4" />
-                Facebook
+                <Facebook className="w-6 h-6" />
               </Button>
               <Button
                 onClick={() => handleShare('twitter')}
-                variant="outline"
-                size="sm"
-                className="gap-2"
+                variant="ghost"
+                size="icon"
+                className="bg-white/5 hover:bg-white/10 backdrop-blur-lg"
               >
-                <Twitter className="w-4 h-4" />
-                Twitter
+                <X className="w-6 h-6" />
+              </Button>
+              <Button
+                onClick={() => handleShare('linkedin')}
+                variant="ghost"
+                size="icon"
+                className="bg-white/5 hover:bg-white/10 backdrop-blur-lg"
+              >
+                <Linkedin className="w-6 h-6" />
+              </Button>
+              <Button
+                onClick={() => handleShare('instagram')}
+                variant="ghost"
+                size="icon"
+                className="bg-white/5 hover:bg-white/10 backdrop-blur-lg"
+              >
+                <Instagram className="w-6 h-6" />
               </Button>
             </div>
           </div>
