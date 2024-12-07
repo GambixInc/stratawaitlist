@@ -56,11 +56,11 @@ export const Login = () => {
       <div className="relative z-10">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
-          <div className="flex flex-col items-center mb-16">
+          <div className="flex justify-between items-center mb-16">
             <img 
-              src="/lovable-uploads/4e754f90-c24c-427d-b22d-c7ac95e0eaf4.png" 
+              src="/lovable-uploads/0e88fe57-f24d-470f-bd94-1e8a284f5c77.png" 
               alt="Gambix" 
-              className="h-24 mb-8" 
+              className="h-16" 
             />
             <Button
               variant="ghost"
