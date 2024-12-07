@@ -1,4 +1,4 @@
-import { Share } from "lucide-react";
+import { Share, Brain, BarChart, UserCheck } from "lucide-react";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { FeatureCard } from "@/components/FeatureCard";
 import { PolicyDialogs } from "@/components/PolicyDialogs";
@@ -108,7 +108,7 @@ const Index = () => {
               description="Create engaging content automatically with our advanced AI algorithms"
             />
             <FeatureCard
-              icon={ChartBar}
+              icon={BarChart}
               title="Real-Time User Analytics"
               description="Track and analyze user behavior with comprehensive real-time insights"
             />
