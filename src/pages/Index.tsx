@@ -40,16 +40,25 @@ const Index = () => {
     }
   };
 
+  const handleReload = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
       <header className="container mx-auto py-4 md:py-6 px-4">
         <div className="flex justify-between items-center">
-          <img 
-            src="/lovable-uploads/12218a5c-e6d1-4914-9dd8-943f5a6528e0.png" 
-            alt="Gambix" 
-            className="h-12 md:h-20" 
-          />
+          <button 
+            onClick={handleReload}
+            className="hover:opacity-80 transition-opacity"
+          >
+            <img 
+              src="/lovable-uploads/12218a5c-e6d1-4914-9dd8-943f5a6528e0.png" 
+              alt="Gambix" 
+              className="h-12 md:h-20" 
+            />
+          </button>
           <div className="flex items-center gap-4">
             <Button
               onClick={() => navigate('/login')}
