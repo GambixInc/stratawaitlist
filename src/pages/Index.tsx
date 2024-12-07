@@ -39,14 +39,18 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="container mx-auto py-6 px-4">
+      <header className="container mx-auto py-4 md:py-6 px-4">
         <div className="flex justify-between items-center">
-          <img src="/lovable-uploads/12218a5c-e6d1-4914-9dd8-943f5a6528e0.png" alt="Gambix" className="h-20" />
-          <div className="flex items-center gap-4">
+          <img 
+            src="/lovable-uploads/12218a5c-e6d1-4914-9dd8-943f5a6528e0.png" 
+            alt="Gambix" 
+            className="h-12 md:h-20" 
+          />
+          <div className="flex items-center gap-2 md:gap-4">
             <Popover>
               <PopoverTrigger asChild>
-                <button className="flex items-center gap-2 text-white hover:text-[#e57c73] transition-colors">
-                  <Share className="w-5 h-5" />
+                <button className="flex items-center gap-1 md:gap-2 text-sm md:text-base text-white hover:text-[#e57c73] transition-colors">
+                  <Share className="w-4 h-4 md:w-5 md:h-5" />
                   Share
                 </button>
               </PopoverTrigger>
@@ -72,36 +76,36 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 pt-20 pb-32">
-        <div className="max-w-3xl mx-auto text-center space-y-20">
+      <main className="container mx-auto px-4 pt-10 md:pt-20 pb-16 md:pb-32">
+        <div className="max-w-3xl mx-auto text-center space-y-10 md:space-y-20">
           {/* Early Access Badge */}
-          <div className="inline-block px-4 py-2 bg-white/10 backdrop-blur-lg rounded-full text-sm">
+          <div className="inline-block px-3 md:px-4 py-1.5 md:py-2 bg-white/10 backdrop-blur-lg rounded-full text-xs md:text-sm">
             Early access available from Jan 1, 2025
           </div>
 
           {/* Hero Section */}
-          <div className="space-y-8">
+          <div className="space-y-4 md:space-y-8">
             <div className="relative">
-              <div className="absolute -left-8 top-1/2 -translate-y-1/2 w-1 h-20 bg-gradient-to-b from-[#e57c73] to-[#e57c73]/70" />
-              <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
+              <div className="absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 w-1 h-16 md:h-20 bg-gradient-to-b from-[#e57c73] to-[#e57c73]/70" />
+              <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight">
                 Early Access
               </h1>
             </div>
-            <p className="text-xl text-white/70">
+            <p className="text-lg md:text-xl text-white/70 px-4 md:px-0">
               Welcome to <span className="text-white">the future of website optimization</span>. Get Early Access.
             </p>
           </div>
 
           {/* Waitlist Form */}
           <div className="relative">
-            <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-3xl" />
-            <div className="relative p-8">
+            <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl md:rounded-3xl" />
+            <div className="relative p-4 md:p-8">
               <WaitlistForm />
             </div>
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mt-10 md:mt-20">
             <FeatureCard
               icon={Brain}
               title="AI-Powered Content Generation"
@@ -120,20 +124,20 @@ const Index = () => {
           </div>
 
           {/* Social Proof */}
-          <div className="mt-20">
-            <div className="flex justify-center items-center gap-20 grayscale hover:grayscale-0 transition-all">
-              <img src="/lovable-uploads/9e487b62-b95a-4dfc-92b1-278d918aaf64.png" alt="Techstars" className="h-20 object-contain opacity-80" />
-              <img src="/lovable-uploads/3b8bd150-b94d-4a7a-82f0-bedb6deedc0e.png" alt="gener8tor" className="h-16 object-contain opacity-80" />
-              <img src="/lovable-uploads/73777373-4933-4d2e-bf59-185ac6a247b5.png" alt="BET" className="h-16 object-contain opacity-80" />
-              <img src="/lovable-uploads/8798da5a-aca5-4fcc-b348-8bfbbb801b2c.png" alt="NFLPA" className="h-16 object-contain opacity-80" />
+          <div className="mt-10 md:mt-20 overflow-x-auto">
+            <div className="flex justify-start md:justify-center items-center gap-8 md:gap-20 grayscale hover:grayscale-0 transition-all min-w-max px-4">
+              <img src="/lovable-uploads/9e487b62-b95a-4dfc-92b1-278d918aaf64.png" alt="Techstars" className="h-12 md:h-20 object-contain opacity-80" />
+              <img src="/lovable-uploads/3b8bd150-b94d-4a7a-82f0-bedb6deedc0e.png" alt="gener8tor" className="h-10 md:h-16 object-contain opacity-80" />
+              <img src="/lovable-uploads/73777373-4933-4d2e-bf59-185ac6a247b5.png" alt="BET" className="h-10 md:h-16 object-contain opacity-80" />
+              <img src="/lovable-uploads/8798da5a-aca5-4fcc-b348-8bfbbb801b2c.png" alt="NFLPA" className="h-10 md:h-16 object-contain opacity-80" />
             </div>
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="container mx-auto px-4 py-6">
-        <div className="flex justify-between items-center text-white/50 text-sm">
+      <footer className="container mx-auto px-4 py-4 md:py-6">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-0 text-white/50 text-xs md:text-sm">
           <PolicyDialogs />
           <p>©2024 Gambix LLC. All Rights Reserved.</p>
         </div>
