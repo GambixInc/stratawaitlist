@@ -1,22 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Check if running in development environment
-const isDevelopment = import.meta.env.DEV;
-
-// Default to empty strings in development to prevent crashes
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || (isDevelopment ? 'http://localhost:54321' : '');
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || (isDevelopment ? 'dummy-key' : '');
-
-if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  console.error(`
-    Missing Supabase environment variables. 
-    To resolve this:
-    1. Click on the Supabase menu in the top right corner
-    2. Click "Connect to Supabase"
-    3. Select your project
-    
-    This will automatically add the required environment variables.
-  `);
-}
+const supabaseUrl = "https://xnjcoexivndpcmjapzbl.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhuamNvZXhpdm5kcGNtamFwemJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2MTA2OTMsImV4cCI6MjA0OTE4NjY5M30.g-D8Uw3-EWFGfskFpUXVhfeoAdoziVuHCifHQx9pQ10";
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
