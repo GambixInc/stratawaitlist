@@ -25,7 +25,7 @@ export const WaitlistFormInputs = ({
         value={fullName}
         onChange={(e) => onFullNameChange(e.target.value)}
         required
-        className="bg-white/5 border-white/10 text-white placeholder:text-white/50"
+        className="bg-white/5 backdrop-blur-xl border-white/10 text-white placeholder:text-white/50 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)]"
         disabled={isSubmitting}
       />
       <Separator className="bg-white/10" />
@@ -35,12 +35,12 @@ export const WaitlistFormInputs = ({
         value={email}
         onChange={(e) => onEmailChange(e.target.value)}
         required
-        className="bg-white/5 border-white/10 text-white placeholder:text-white/50"
+        className="bg-white/5 backdrop-blur-xl border-white/10 text-white placeholder:text-white/50 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)]"
         disabled={isSubmitting}
       />
       <Button 
         type="submit" 
-        className="w-full bg-[#e57c73] hover:bg-[#e57c73]/90 text-white"
+        className="w-full bg-[#e57c73]/90 hover:bg-[#e57c73] backdrop-blur-xl border border-white/10 text-white shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)]"
         disabled={isSubmitting}
       >
         {isSubmitting ? "Joining..." : "Join Now"}
