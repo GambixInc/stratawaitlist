@@ -1,7 +1,7 @@
-import { Share, Brain, ChartBar, UserCheck } from "lucide-react";
+import { Share } from "lucide-react";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { FeatureCard } from "@/components/FeatureCard";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { PolicyDialogs } from "@/components/PolicyDialogs";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const Index = () => {
@@ -35,77 +35,6 @@ const Index = () => {
         }
     }
   };
-
-  const privacyPolicyContent = `Privacy Policy
-
-Last updated: December 5, 2024
-
-1. Introduction
-Welcome to Gambix ("we," "us," or "our"). We are committed to protecting your privacy and ensuring you have a positive experience on our website.
-
-2. Information We Collect
-We collect information that you voluntarily provide to us when you:
-- Join our waitlist
-- Share our platform
-- Interact with our website
-
-3. How We Use Your Information
-We use the collected information to:
-- Manage your position on our waitlist
-- Send you updates about our launch
-- Track referrals and rewards
-- Improve our service
-
-4. Data Security
-We implement appropriate technical and organizational measures to protect your personal information.
-
-5. Your Rights
-You have the right to:
-- Access your personal data
-- Request correction of your data
-- Request deletion of your data
-- Withdraw consent
-
-6. Contact Us
-For any privacy-related questions, please contact us at privacy@gambix.com
-
-7. Updates to This Policy
-We may update this policy from time to time. We will notify you of any changes by posting the new policy on this page.`;
-
-  const termsContent = `Terms of Service
-
-Last updated: December 5, 2024
-
-1. Acceptance of Terms
-By accessing and using Gambix's website and services, you agree to be bound by these Terms of Service.
-
-2. Waitlist Program
-- Joining the waitlist does not guarantee access to our platform
-- Your position may change based on referrals and other factors
-- We reserve the right to modify the waitlist program
-
-3. Referral Program
-- You must not use spam or automated methods to generate referrals
-- We may void referrals that violate our policies
-- Rewards are subject to availability
-
-4. User Conduct
-You agree to:
-- Provide accurate information
-- Not manipulate the referral system
-- Respect other users
-
-5. Intellectual Property
-All content on this website is our property and protected by copyright laws.
-
-6. Limitation of Liability
-We are not liable for any damages arising from your use of our service.
-
-7. Modifications
-We may modify these terms at any time. Continued use constitutes acceptance of changes.
-
-8. Contact
-For any questions about these terms, please contact legal@gambix.com`;
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -205,34 +134,7 @@ For any questions about these terms, please contact legal@gambix.com`;
       {/* Footer */}
       <footer className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center text-white/50 text-sm">
-          <div className="flex gap-4">
-            <Dialog>
-              <DialogTrigger className="hover:text-white/70">Privacy Policy</DialogTrigger>
-              <DialogContent className="max-w-2xl bg-black/90 backdrop-blur-lg border-[#e57c73]/20">
-                <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold text-white">Privacy Policy</DialogTitle>
-                  <DialogDescription>
-                    <div className="mt-4 max-h-[60vh] overflow-y-auto text-white/90 whitespace-pre-wrap">
-                      {privacyPolicyContent}
-                    </div>
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
-            <Dialog>
-              <DialogTrigger className="hover:text-white/70">Terms of Service</DialogTrigger>
-              <DialogContent className="max-w-2xl bg-black/90 backdrop-blur-lg border-[#e57c73]/20">
-                <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold text-white">Terms of Service</DialogTitle>
-                  <DialogDescription>
-                    <div className="mt-4 max-h-[60vh] overflow-y-auto text-white/90 whitespace-pre-wrap">
-                      {termsContent}
-                    </div>
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
-          </div>
+          <PolicyDialogs />
           <p>©2024 Gambix LLC. All Rights Reserved.</p>
         </div>
       </footer>
