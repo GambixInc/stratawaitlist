@@ -41,7 +41,7 @@ const Index = () => {
       {/* Header */}
       <header className="container mx-auto py-6 px-4">
         <div className="flex justify-between items-center">
-          <img src="/lovable-uploads/12218a5c-e6d1-4914-9dd8-943f5a6528e0.png" alt="Gambix" className="h-10" />
+          <img src="/lovable-uploads/12218a5c-e6d1-4914-9dd8-943f5a6528e0.png" alt="Gambix" className="h-20" />
           <div className="flex items-center gap-4">
             <Popover>
               <PopoverTrigger asChild>
@@ -121,8 +121,8 @@ const Index = () => {
 
           {/* Social Proof */}
           <div className="mt-20">
-            <div className="flex justify-center gap-16 grayscale hover:grayscale-0 transition-all">
-              <img src="/lovable-uploads/9e487b62-b95a-4dfc-92b1-278d918aaf64.png" alt="Techstars" className="h-16 object-contain opacity-80" />
+            <div className="flex justify-center items-center gap-20 grayscale hover:grayscale-0 transition-all">
+              <img src="/lovable-uploads/9e487b62-b95a-4dfc-92b1-278d918aaf64.png" alt="Techstars" className="h-20 object-contain opacity-80" />
               <img src="/lovable-uploads/3b8bd150-b94d-4a7a-82f0-bedb6deedc0e.png" alt="gener8tor" className="h-16 object-contain opacity-80" />
               <img src="/lovable-uploads/73777373-4933-4d2e-bf59-185ac6a247b5.png" alt="BET" className="h-16 object-contain opacity-80" />
               <img src="/lovable-uploads/8798da5a-aca5-4fcc-b348-8bfbbb801b2c.png" alt="NFLPA" className="h-16 object-contain opacity-80" />
