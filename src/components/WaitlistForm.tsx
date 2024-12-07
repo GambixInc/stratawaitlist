@@ -25,7 +25,7 @@ export const WaitlistForm = () => {
       if (referralCode) {
         const { data: referrer } = await supabase
           .from("waitlist")
-          .select("id")
+          .select("id, referral_count")
           .eq("referral_link", referralCode)
           .single();
 
@@ -34,7 +34,7 @@ export const WaitlistForm = () => {
           // Increment referrer's count
           await supabase
             .from("waitlist")
-            .update({ referral_count: referrer.referral_count + 1 })
+            .update({ referral_count: (referrer.referral_count || 0) + 1 })
             .eq("id", referrer.id);
         }
       }
