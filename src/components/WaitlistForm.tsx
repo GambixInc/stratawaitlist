@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import confetti from "canvas-confetti";
 import { WaitlistFormInputs } from "./WaitlistFormInputs";
 import { WaitlistSuccess } from "./WaitlistSuccess";
+import { useSearchParams } from "react-router-dom";
 
 export const WaitlistForm = () => {
   const [fullName, setFullName] = useState("");
@@ -11,12 +12,33 @@ export const WaitlistForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedUserId, setSubmittedUserId] = useState<string>();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const referralCode = searchParams.get("ref");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
+      // First, check if the referral code is valid
+      let referredBy = null;
+      if (referralCode) {
+        const { data: referrer } = await supabase
+          .from("waitlist")
+          .select("id")
+          .eq("referral_link", referralCode)
+          .single();
+
+        if (referrer) {
+          referredBy = referralCode;
+          // Increment referrer's count
+          await supabase
+            .from("waitlist")
+            .update({ referral_count: referrer.referral_count + 1 })
+            .eq("id", referrer.id);
+        }
+      }
+
       const { data, error } = await supabase
         .from("waitlist")
         .insert([
@@ -24,6 +46,7 @@ export const WaitlistForm = () => {
             full_name: fullName,
             email: email,
             referral_count: 0,
+            referred_by: referredBy
           },
         ])
         .select()

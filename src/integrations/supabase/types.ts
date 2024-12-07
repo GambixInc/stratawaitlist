@@ -16,6 +16,9 @@ export type Database = {
           full_name: string
           id: string
           referral_count: number | null
+          referral_link: string | null
+          referred_by: string | null
+          tier_level: number | null
         }
         Insert: {
           created_at?: string
@@ -23,6 +26,9 @@ export type Database = {
           full_name: string
           id?: string
           referral_count?: number | null
+          referral_link?: string | null
+          referred_by?: string | null
+          tier_level?: number | null
         }
         Update: {
           created_at?: string
@@ -30,8 +36,19 @@ export type Database = {
           full_name?: string
           id?: string
           referral_count?: number | null
+          referral_link?: string | null
+          referred_by?: string | null
+          tier_level?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_referred_by"
+            columns: ["referred_by"]
+            isOneToOne: false
+            referencedRelation: "waitlist"
+            referencedColumns: ["referral_link"]
+          },
+        ]
       }
     }
     Views: {

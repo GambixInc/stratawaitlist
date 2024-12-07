@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
-import { Trophy } from "lucide-react";
+import { Trophy, Crown } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
 
 export type LeaderboardEntry = {
@@ -9,6 +9,7 @@ export type LeaderboardEntry = {
   full_name: string;
   referral_count: number;
   created_at: string;
+  tier_level: number;
 };
 
 export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
@@ -17,7 +18,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("waitlist")
-        .select("id, full_name, referral_count, created_at")
+        .select("id, full_name, referral_count, created_at, tier_level")
         .order("referral_count", { ascending: false })
         .limit(10);
 
@@ -29,6 +30,17 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
   if (isLoading) {
     return <div className="text-center p-4">Loading leaderboard...</div>;
   }
+
+  const getTierColor = (tier: number) => {
+    switch (tier) {
+      case 3:
+        return "text-yellow-400";
+      case 2:
+        return "text-purple-400";
+      default:
+        return "text-blue-400";
+    }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto bg-white/10 backdrop-blur-lg rounded-xl p-6">
@@ -53,7 +65,10 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
                 <span className="text-lg font-medium w-6">
                   {index + 1}
                 </span>
-                <span className="font-medium">{entry.full_name}</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{entry.full_name}</span>
+                  <Crown className={cn("w-4 h-4", getTierColor(entry.tier_level))} />
+                </div>
               </div>
               <span className="text-sm bg-white/10 px-2 py-1 rounded">
                 {entry.referral_count} referrals
