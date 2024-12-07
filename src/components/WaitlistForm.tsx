@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import confetti from "canvas-confetti";
-import { Leaderboard } from "./Leaderboard";
+import { WaitlistFormInputs } from "./WaitlistFormInputs";
+import { WaitlistSuccess } from "./WaitlistSuccess";
 
 export const WaitlistForm = () => {
   const [fullName, setFullName] = useState("");
@@ -33,7 +31,6 @@ export const WaitlistForm = () => {
 
       if (error) throw error;
 
-      // Trigger confetti effect
       confetti({
         particleCount: 100,
         spread: 70,
@@ -47,7 +44,6 @@ export const WaitlistForm = () => {
         description: "Thank you for joining. Share with friends to climb the leaderboard!",
       });
 
-      // Reset form
       setFullName("");
       setEmail("");
     } catch (error) {
@@ -65,41 +61,16 @@ export const WaitlistForm = () => {
   return (
     <div className="space-y-8">
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-4">
-          <Input
-            type="text"
-            placeholder="Full Name"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-            className="bg-white/5 border-white/10 text-white placeholder:text-white/50"
-            disabled={isSubmitting}
-          />
-          <Separator className="bg-white/10" />
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="bg-white/5 border-white/10 text-white placeholder:text-white/50"
-            disabled={isSubmitting}
-          />
-        </div>
-        <Button 
-          type="submit" 
-          className="w-full bg-[#e57c73] hover:bg-[#e57c73]/90 text-white"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Joining..." : "Join Now"}
-        </Button>
+        <WaitlistFormInputs
+          fullName={fullName}
+          email={email}
+          isSubmitting={isSubmitting}
+          onFullNameChange={setFullName}
+          onEmailChange={setEmail}
+        />
       </form>
 
-      {submittedUserId && (
-        <div className="animate-fade-in">
-          <Leaderboard currentUserId={submittedUserId} />
-        </div>
-      )}
+      {submittedUserId && <WaitlistSuccess userId={submittedUserId} />}
     </div>
   );
 };
