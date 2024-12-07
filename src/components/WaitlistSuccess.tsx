@@ -51,7 +51,6 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
         window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`);
         break;
       case 'instagram':
-        // Since Instagram doesn't have a direct share URL, we'll copy the link
         await navigator.clipboard.writeText(shareUrl);
         toast({
           title: "Link copied!",
@@ -77,7 +76,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
 
   return (
     <div className="animate-fade-in space-y-8">
-      <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 space-y-6">
+      <div className="space-y-6">
         <CountdownTimer />
         
         {referralLink && (
