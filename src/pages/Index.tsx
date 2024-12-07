@@ -149,6 +149,8 @@ const Index = () => {
               <img src="/lovable-uploads/3b8bd150-b94d-4a7a-82f0-bedb6deedc0e.png" alt="gener8tor" className="h-10 md:h-16 object-contain opacity-80" />
               <img src="/lovable-uploads/73777373-4933-4d2e-bf59-185ac6a247b5.png" alt="BET" className="h-10 md:h-16 object-contain opacity-80" />
               <img src="/lovable-uploads/8798da5a-aca5-4fcc-b348-8bfbbb801b2c.png" alt="NFLPA" className="h-10 md:h-16 object-contain opacity-80" />
+              <img src="/lovable-uploads/c35b8948-bf48-4ade-b026-5470fcbf90c2.png" alt="XC" className="h-10 md:h-16 object-contain opacity-80" />
+              <img src="/lovable-uploads/4c3ee9ec-0baa-4486-923e-bed330482eb6.png" alt="Prepare4VC" className="h-10 md:h-16 object-contain opacity-80" />
             </div>
           </div>
         </div>
