@@ -3,6 +3,7 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 import { FeatureCard } from "@/components/FeatureCard";
 import { PolicyDialogs } from "@/components/PolicyDialogs";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CountdownTimer } from "@/components/CountdownTimer";
 
 const Index = () => {
   const shareContent = {
