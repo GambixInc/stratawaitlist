@@ -61,39 +61,48 @@ export const WaitlistForm = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiZjI1MzBkMzFlOWJjMmJlY2Y1MWM4Y2FmNDUzZmEzMzE2ZjE1OGIzYjJjMDE2ZDI3M2EyMDE1MDNlYWViMzlkODkyNjIyMGFkODdmODRmYWQiLCJpYXQiOjE3MzM0MzA4NTEuODMzOTE5LCJuYmYiOjE3MzM0MzA4NTEuODMzOTIyLCJleHAiOjQ4ODkxMDQ0NTEuODI5MjUxLCJzdWIiOiI2NzY0MTciLCJzY29wZXMiOltdfQ.hd_7BSSBN2ycoca7lp7FpRsk7jKfUTt6BkBwDCMrLuRr6IgaAd-H2dmue0H9iH5xleGu2-Fi-SKnZUzUgoVJSD0AGxkyXNr7owPMz8rSi6A1PiLMNwKq8JzRE1se_nM0opJ_qr1YGoz46ahZUQB89Wy8y0aQJhwZ9XBFcHIKPYhOCXlsQ8VX-c1naibi9HRAYffBDdszFMULuYUN3JUYyCh5uBbXi_ygvu8bRjQSXpwTAsrjRbgEUFNy_FIJIZJfI-RhQ0p-s9e4auEzBKyT9c9cMgbpdzv3GMQ3y-iLEKm7yzxYHsoSkNJ61aL_XGgXAfGBEJA9-hAPWGc5q6EztQIMvWVI72N7Nz0rNm3QcHOKe8Gp0nThJj1bhDHjLsUZQPl4t8kYI0Cm_4V19LK4YnAZ2Z2CVj1Ym2q0ffsLjnYMKqF0fGgjZKh9xMJXznvwcDpHPvbjdSdwkNhQgVl1Ke5gaJK7BQaE1CwBtQKVJYUlB-qBZMrwtUuc-3LqP9KuGnH3xaIIG5E6Zs58nrm-4emqDVBa370RLhSVEL97FAzLMjOYmBhUKokOIo56A5UzArrg2yQ9r6cXVxZPQWFaavHQLwUzLkFe6PVelRlDPBuctjKmcWIOSGT3_5TgsRA6RJRby0XyJ2etZjkA_6Jh7gLCq2OIjKQ5snDdZa4wgYM`
+          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiZjI1MzBkMzFlOWJjMmJlY2Y1MWM4Y2FmNDUzZmEzMzE2ZjE1OGIzYjJjMDE2ZDI3M2EyMDE1MDNlYWViMzlkODkyNjIyMGFkODdmODRmYWQiLCJpYXQiOjE3MzM0MzA4NTEuODMzOTE5LCJuYmYiOjE3MzM0MzA4NTEuODMzOTIyLCJleHAiOjQ4ODkxMDQ0NTEuODI5MjUxLCJzdWIiOiI2NzY0MTciLCJzY29wZXMiOltdfQ.hd_7BSSBN2ycoca7lp7FpRsk7jKfUTt6BkBwDCMrLuRr6IgaAd-H2dmue0H9iH5xleGu2-Fi-SKnZUzUgoVJSD0AGxkyXNr7owPMz8rSi6A1PiLMNwKq8JzRE1se_nM0opJ_qr1YGoz46ahZUQB89Wy8y0aQJhwZ9XBFcHIKPYhOCXlsQ8VX-c1naibi9HRAYffBDdszFMULuYUN3JUYyCh5uBbXi_ygvu8bRjQSXpwTAsrjRbgEUFNy_FIJIZJfI-RhQ0p-s9e4auEzBKyT9c9cMgbpdzv3GMQ3y-iLEKm7yzxYHsoSkNJ61aL_XGgXAfGBEJA9-hAPWGc5q6EztQIMvWVI72N7Nz0rNm3QcHOKe8Gp0nThJj1bhDHjLsUZQPl4t8kYI0Cm_4V19LK4YnAZ2Z2CVj1Ym2q0ffsLjnYMKqF0fGgjZKh9xMJXznvwcDpHPvbjdSdwkNhQgVl1Ke5gaJK7BQaE1CwBtQKVJYUlB-qBZMrwtUuc-3LqP9KuGnH3xaIIG5E6Zs58nrm-4emqDVBa370RLhSVEL97FAzLMjOYmBhUKokOIo56A5UzArrg2yQ9r6cXVxZPQWFaavHQLwUzLkFe6PVelRlDPBuctjKmcWIOSGT3_5TgsRA6RJRby0XyJ2etZjkA_6Jh7gLCq2OIjKQ5snDdZa4wgYM'
         },
         body: JSON.stringify({
           email: email,
           fields: {
-            name: name
-          }
+            name: name,
+            source: window.location.href // Track referral source
+          },
+          groups: ['waitlist'] // Add to waitlist group
         })
       });
 
-      if (response.ok) {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-        setShowConfirmation(true);
-        setName("");
-        setEmail("");
-        // Generate a unique referral code (you might want to get this from your backend)
-        setReferralCode(`${name.toLowerCase().replace(/\s+/g, '')}-${Math.random().toString(36).substr(2, 6)}`);
-        // Mock leaderboard data - replace with real data from your backend
-        setLeaderboard([
-          { name: "John D.", referrals: 15, position: 1 },
-          { name: "Sarah M.", referrals: 12, position: 2 },
-          { name: "Mike R.", referrals: 10, position: 3 },
-          // Add more entries...
-        ]);
-        setUserPosition(4); // Mock position - replace with real position from your backend
-      } else {
-        throw new Error('Failed to subscribe');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      const data = await response.json();
+      console.log('MailerLite response:', data);
+
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      setShowConfirmation(true);
+      setName("");
+      setEmail("");
+      
+      // Generate a unique referral code
+      setReferralCode(`${name.toLowerCase().replace(/\s+/g, '')}-${Math.random().toString(36).substr(2, 6)}`);
+      
+      // Mock leaderboard data - replace with real data from your backend
+      setLeaderboard([
+        { name: "John D.", referrals: 15, position: 1 },
+        { name: "Sarah M.", referrals: 12, position: 2 },
+        { name: "Mike R.", referrals: 10, position: 3 },
+      ]);
+      setUserPosition(4);
+
     } catch (error) {
+      console.error('Error submitting to MailerLite:', error);
       toast({
         title: "Error",
         description: "Something went wrong. Please try again later.",
