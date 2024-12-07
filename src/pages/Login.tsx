@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BarChart3, Zap, LineChart, TrendingUp, ArrowRight, DollarSign } from "lucide-react";
+import { Zap, Bot, Sparkles, ArrowRight, Settings2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
@@ -108,44 +108,44 @@ export const Login = () => {
           {/* Features */}
           <div className="space-y-8">
             <h3 className="text-2xl font-bold text-white mb-8">
-              Maximize Revenue & Reduce Costs with AI-Powered Analytics
+              AI-Powered Website Optimization & Automation
             </h3>
             
             <div className="grid gap-6">
               <div className="flex items-start gap-4 p-4 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10">
                 <div className="p-2 bg-[#e57c73]/10 rounded-lg">
-                  <DollarSign className="h-6 w-6 text-[#e57c73]" />
+                  <Sparkles className="h-6 w-6 text-[#e57c73]" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">Increase Revenue by 30%</h4>
-                  <p className="text-white/70">Our AI-driven insights help optimize conversion rates and boost your bottom line.</p>
+                  <h4 className="text-lg font-semibold text-white mb-2">Increase Revenue by 30%+</h4>
+                  <p className="text-white/70">Our AI optimization engine automatically enhances your conversion rates.</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4 p-4 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10">
                 <div className="p-2 bg-[#e57c73]/10 rounded-lg">
-                  <Zap className="h-6 w-6 text-[#e57c73]" />
+                  <Bot className="h-6 w-6 text-[#e57c73]" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">Cut Costs by 40%</h4>
-                  <p className="text-white/70">Automate optimization and reduce manual analysis costs with our AI platform.</p>
+                  <h4 className="text-lg font-semibold text-white mb-2">Automated Maintenance</h4>
+                  <p className="text-white/70">AI-powered updates and maintenance keep your site running smoothly 24/7.</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4 p-4 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10">
                 <div className="p-2 bg-[#e57c73]/10 rounded-lg">
-                  <LineChart className="h-6 w-6 text-[#e57c73]" />
+                  <Settings2 className="h-6 w-6 text-[#e57c73]" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">ROI Analytics</h4>
-                  <p className="text-white/70">Track your investment returns with real-time performance metrics.</p>
+                  <h4 className="text-lg font-semibold text-white mb-2">Smart Optimization</h4>
+                  <p className="text-white/70">Continuous performance improvements with zero manual effort.</p>
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-[#e57c73]/20 to-purple-500/20 rounded-xl border border-white/10">
-              <TrendingUp className="h-8 w-8 text-[#e57c73]" />
-              <p className="text-lg font-medium text-white">Join thousands of businesses already saving $10k+ monthly with our platform</p>
+              <Zap className="h-8 w-8 text-[#e57c73]" />
+              <p className="text-lg font-medium text-white">Join the businesses saving $10k+ monthly with our AI platform</p>
             </div>
           </div>
         </div>
