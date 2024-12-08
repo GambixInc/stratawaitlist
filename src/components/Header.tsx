@@ -5,11 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { LoginForm } from "./LoginForm";
 import { Dialog, DialogContent } from "./ui/dialog";
+import { supabase } from "@/lib/supabase";
 
 const Header = () => {
   const navigate = useNavigate();
   const [showLoginForm, setShowLoginForm] = useState(false);
   
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
   const handleShare = async (platform: string) => {
     const shareContent = {
       text: "I have just joined the waitlist to be apart of the future of the web. You should join too!",
@@ -50,10 +56,10 @@ const Header = () => {
         </button>
         <div className="flex items-center gap-4">
           <Button
-            onClick={() => setShowLoginForm(true)}
+            onClick={handleLogout}
             className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white"
           >
-            Login
+            Logout
           </Button>
           <Popover>
             <PopoverTrigger asChild>

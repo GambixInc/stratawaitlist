@@ -35,6 +35,11 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         return;
       }
 
+      toast({
+        title: `Welcome back, ${fullName}!`,
+        description: "Successfully logged in.",
+      });
+
       if (onSuccess) {
         onSuccess();
       }
