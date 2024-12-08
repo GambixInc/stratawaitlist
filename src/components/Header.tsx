@@ -2,7 +2,7 @@ import { Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LoginForm } from "./LoginForm";
 import { Dialog, DialogContent } from "./ui/dialog";
 import { supabase } from "@/lib/supabase";
@@ -10,7 +10,25 @@ import { supabase } from "@/lib/supabase";
 const Header = () => {
   const navigate = useNavigate();
   const [showLoginForm, setShowLoginForm] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    // Check initial auth state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+
+    // Cleanup subscription
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/');
@@ -56,10 +74,10 @@ const Header = () => {
         </button>
         <div className="flex items-center gap-4">
           <Button
-            onClick={handleLogout}
+            onClick={isAuthenticated ? handleLogout : () => setShowLoginForm(true)}
             className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white"
           >
-            Logout
+            {isAuthenticated ? 'Logout' : 'Login'}
           </Button>
           <Popover>
             <PopoverTrigger asChild>
