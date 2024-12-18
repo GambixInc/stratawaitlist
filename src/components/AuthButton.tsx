@@ -44,6 +44,13 @@ export const AuthButton = () => {
     }
   };
 
+  // If we're on the dashboard, we know we're authenticated
+  useEffect(() => {
+    if (window.location.pathname === '/dashboard') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   return (
     <>
       <Button
