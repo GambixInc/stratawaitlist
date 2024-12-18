@@ -11,21 +11,27 @@ export const AuthButton = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    // Check initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthenticated(!!session);
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Subscribe to auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
+      if (event === 'SIGNED_OUT') {
+        navigate('/');
+      }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [navigate]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    setIsAuthenticated(false);
     navigate('/');
   };
 
@@ -41,7 +47,10 @@ export const AuthButton = () => {
       <Dialog open={showLoginForm} onOpenChange={setShowLoginForm}>
         <DialogContent className="bg-black border-[#e57c73] text-white">
           <div className="p-6">
-            <LoginForm onSuccess={() => setShowLoginForm(false)} />
+            <LoginForm onSuccess={() => {
+              setShowLoginForm(false);
+              setIsAuthenticated(true);
+            }} />
           </div>
         </DialogContent>
       </Dialog>
