@@ -15,6 +15,7 @@ interface WaitlistSuccessProps {
 export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
   const [referralLink] = useState(`${window.location.origin}/?ref=${userId}`);
   const [referralCount, setReferralCount] = useState(0);
+  const [hasShared, setHasShared] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -22,7 +23,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
     const fetchReferralCount = async () => {
       const { data, error } = await supabase
         .from("waitlist")
-        .select("referral_count")
+        .select("referral_count, email")
         .eq("id", userId)
         .single();
 
@@ -32,6 +33,10 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
       }
 
       setReferralCount(data.referral_count || 0);
+      // Store email for later use in sign in
+      if (data.email) {
+        localStorage.setItem('waitlist_email', data.email);
+      }
     };
 
     fetchReferralCount();
@@ -39,10 +44,48 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
 
   const handleCopyLink = async () => {
     await navigator.clipboard.writeText(referralLink);
+    setHasShared(true);
     toast({
       title: "Link copied!",
       description: "Share it with your friends",
     });
+  };
+
+  const handleDashboardAccess = async () => {
+    const email = localStorage.getItem('waitlist_email');
+    if (!email) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not find your email. Please try logging in manually.",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: true,
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success!",
+        description: "Check your email for the login link.",
+      });
+
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to send login link. Please try again.",
+      });
+    }
   };
 
   return (
@@ -74,12 +117,17 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
             </div>
 
             <div className="flex flex-col gap-4 items-center">
-              <ShareButton shareUrl={referralLink} shareText="Join me on the waitlist for this exciting new platform!" />
+              <ShareButton 
+                shareUrl={referralLink} 
+                shareText="Join me on the waitlist for this exciting new platform!"
+                onShare={() => setHasShared(true)}
+              />
               <Button
-                onClick={() => navigate('/dashboard')}
-                className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white w-full"
+                onClick={handleDashboardAccess}
+                disabled={!hasShared}
+                className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white px-6"
               >
-                Go to Dashboard
+                {hasShared ? "Go to Dashboard" : "Share First to Unlock Dashboard"}
               </Button>
             </div>
           </div>

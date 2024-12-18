@@ -5,9 +5,10 @@ import { useToast } from "@/hooks/use-toast";
 interface ShareButtonProps {
   shareUrl?: string;
   shareText?: string;
+  onShare?: () => void;
 }
 
-export const ShareButton = ({ shareUrl, shareText }: ShareButtonProps) => {
+export const ShareButton = ({ shareUrl, shareText, onShare }: ShareButtonProps) => {
   const { toast } = useToast();
   
   const handleShare = async (platform: string) => {
@@ -43,6 +44,9 @@ export const ShareButton = ({ shareUrl, shareText }: ShareButtonProps) => {
           console.log('Error sharing:', err);
         }
     }
+    
+    // Call onShare callback if provided
+    onShare?.();
   };
 
   return (
