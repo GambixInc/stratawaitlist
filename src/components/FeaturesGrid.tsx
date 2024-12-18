@@ -3,7 +3,7 @@ import { FeatureCard } from "./FeatureCard";
 
 const FeaturesGrid = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mt-10 md:mt-20">
+    <div id="features" className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mt-10 md:mt-20">
       <FeatureCard
         icon={Brain}
         title="AI-Powered Content Generation"

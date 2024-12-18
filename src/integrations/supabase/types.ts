@@ -9,34 +9,111 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      referral_rewards: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          points_required: number
+          reward_type: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          points_required: number
+          reward_type: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          points_required?: number
+          reward_type?: string
+        }
+        Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          achieved_at: string
+          achievement_type: string
+          id: string
+          metadata: Json | null
+          points_earned: number | null
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string
+          achievement_type: string
+          id?: string
+          metadata?: Json | null
+          points_earned?: number | null
+          user_id: string
+        }
+        Update: {
+          achieved_at?: string
+          achievement_type?: string
+          id?: string
+          metadata?: Json | null
+          points_earned?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "waitlist"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       waitlist: {
         Row: {
+          badges: Json | null
           created_at: string
           email: string
           full_name: string
           id: string
+          last_referral_at: string | null
+          milestones: Json | null
+          points: number | null
           referral_count: number | null
           referral_link: string | null
+          referral_streak: number | null
           referred_by: string | null
           tier_level: number | null
         }
         Insert: {
+          badges?: Json | null
           created_at?: string
           email: string
           full_name: string
           id?: string
+          last_referral_at?: string | null
+          milestones?: Json | null
+          points?: number | null
           referral_count?: number | null
           referral_link?: string | null
+          referral_streak?: number | null
           referred_by?: string | null
           tier_level?: number | null
         }
         Update: {
+          badges?: Json | null
           created_at?: string
           email?: string
           full_name?: string
           id?: string
+          last_referral_at?: string | null
+          milestones?: Json | null
+          points?: number | null
           referral_count?: number | null
           referral_link?: string | null
+          referral_streak?: number | null
           referred_by?: string | null
           tier_level?: number | null
         }
