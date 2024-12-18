@@ -6,6 +6,7 @@ import { CountdownTimer } from "./CountdownTimer";
 import { RewardsProgress } from "./RewardsProgress";
 import { ShareButton } from "./ShareButton";
 import { supabase } from "@/lib/supabase";
+import { useNavigate } from "react-router-dom";
 
 interface WaitlistSuccessProps {
   userId: string;
@@ -15,6 +16,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
   const [referralLink] = useState(`${window.location.origin}/?ref=${userId}`);
   const [referralCount, setReferralCount] = useState(0);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchReferralCount = async () => {
@@ -71,8 +73,14 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
               </Button>
             </div>
 
-            <div className="flex justify-center">
+            <div className="flex flex-col gap-4 items-center">
               <ShareButton shareUrl={referralLink} shareText="Join me on the waitlist for this exciting new platform!" />
+              <Button
+                onClick={() => navigate('/dashboard')}
+                className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white w-full"
+              >
+                Go to Dashboard
+              </Button>
             </div>
           </div>
         )}
