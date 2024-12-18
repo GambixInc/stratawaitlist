@@ -6,6 +6,7 @@ import Index from "@/pages/Index";
 import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
 import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -48,6 +49,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
+        <Toaster />
       </Router>
     </QueryClientProvider>
   );
