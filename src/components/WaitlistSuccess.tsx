@@ -63,19 +63,27 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
     }
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      // Generate a random password for the user
+      const password = Math.random().toString(36).slice(-12);
+      
+      // Try to create the user first
+      const { error: signUpError } = await supabase.auth.signUp({
         email,
+        password,
         options: {
-          shouldCreateUser: true,
+          data: {
+            waitlist_id: userId
+          }
         }
       });
 
-      if (error) throw error;
-
-      toast({
-        title: "Success!",
-        description: "Check your email for the login link.",
+      // If user already exists or after creation, sign them in
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
+
+      if (signInError) throw signInError;
 
       navigate('/dashboard');
     } catch (error) {
@@ -83,7 +91,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to send login link. Please try again.",
+        description: "Failed to access dashboard. Please try again.",
       });
     }
   };
