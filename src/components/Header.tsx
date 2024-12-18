@@ -1,9 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { AuthButton } from "./AuthButton";
-import { ShareButton } from "./ShareButton";
+import { Button } from "./ui/button";
 
 const Header = () => {
   const navigate = useNavigate();
+
+  const scrollToFeatures = () => {
+    const featuresSection = document.getElementById('features');
+    if (featuresSection) {
+      featuresSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <header className="container mx-auto py-4 md:py-6 px-4">
@@ -19,8 +26,14 @@ const Header = () => {
           />
         </button>
         <div className="flex items-center gap-4">
+          <Button
+            onClick={scrollToFeatures}
+            variant="ghost"
+            className="text-white hover:text-[#e57c73]"
+          >
+            Features
+          </Button>
           <AuthButton />
-          <ShareButton />
         </div>
       </div>
     </header>
