@@ -1,26 +1,44 @@
 import { Share } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useToast } from "@/hooks/use-toast";
 
-export const ShareButton = () => {
+interface ShareButtonProps {
+  shareUrl?: string;
+  shareText?: string;
+}
+
+export const ShareButton = ({ shareUrl, shareText }: ShareButtonProps) => {
+  const { toast } = useToast();
+  
   const handleShare = async (platform: string) => {
-    const shareContent = {
-      text: "I have just joined the waitlist to be apart of the future of the web. You should join too!",
-      url: window.location.href
-    };
+    const url = shareUrl || window.location.href;
+    const text = shareText || "Check this out!";
 
     switch (platform) {
       case 'twitter':
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareContent.text)}&url=${encodeURIComponent(shareContent.url)}`);
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
         break;
       case 'linkedin':
-        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareContent.url)}`);
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`);
         break;
       case 'facebook':
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareContent.url)}`);
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
         break;
       default:
         try {
-          await navigator.share(shareContent);
+          if (navigator.share) {
+            await navigator.share({
+              title: "Join the waitlist",
+              text: text,
+              url: url
+            });
+          } else {
+            await navigator.clipboard.writeText(url);
+            toast({
+              title: "Link copied!",
+              description: "Share it with your friends",
+            });
+          }
         } catch (err) {
           console.log('Error sharing:', err);
         }

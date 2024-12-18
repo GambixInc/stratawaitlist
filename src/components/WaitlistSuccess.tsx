@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { CountdownTimer } from "./CountdownTimer";
 import { RewardsProgress } from "./RewardsProgress";
-import { Share } from "lucide-react";
+import { ShareButton } from "./ShareButton";
 import { supabase } from "@/lib/supabase";
 
 interface WaitlistSuccessProps {
@@ -35,35 +35,12 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
     fetchReferralCount();
   }, [userId]);
 
-  const handleShare = async (platform: 'twitter' | 'facebook' | 'linkedin' | 'instagram' | 'copy') => {
-    const shareUrl = referralLink;
-    const shareText = "Join me on the waitlist for this exciting new platform!";
-
-    switch (platform) {
-      case 'twitter':
-        window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`);
-        break;
-      case 'facebook':
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`);
-        break;
-      case 'linkedin':
-        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`);
-        break;
-      case 'instagram':
-        await navigator.clipboard.writeText(shareUrl);
-        toast({
-          title: "Link copied!",
-          description: "Share it on Instagram",
-        });
-        break;
-      case 'copy':
-        await navigator.clipboard.writeText(shareUrl);
-        toast({
-          title: "Link copied!",
-          description: "Share it with your friends",
-        });
-        break;
-    }
+  const handleCopyLink = async () => {
+    await navigator.clipboard.writeText(referralLink);
+    toast({
+      title: "Link copied!",
+      description: "Share it with your friends",
+    });
   };
 
   return (
@@ -87,12 +64,15 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
                 className="bg-white/5 backdrop-blur-xl border-white/10 text-white"
               />
               <Button
-                onClick={() => handleShare('copy')}
+                onClick={handleCopyLink}
                 className="bg-black hover:bg-black/80 text-white border border-white/10"
               >
-                <Share className="w-4 h-4" />
-                Share
+                Copy
               </Button>
+            </div>
+
+            <div className="flex justify-center">
+              <ShareButton shareUrl={referralLink} shareText="Join me on the waitlist for this exciting new platform!" />
             </div>
           </div>
         )}
