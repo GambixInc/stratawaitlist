@@ -67,7 +67,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
       const password = Math.random().toString(36).slice(-12);
       
       // Try to create the user first
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -78,12 +78,18 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
       });
 
       // If user already exists or after creation, sign them in
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (signInError) throw signInError;
+
+      // Show success toast
+      toast({
+        title: "Success!",
+        description: "You've been automatically signed in.",
+      });
 
       navigate('/dashboard');
     } catch (error) {
@@ -133,7 +139,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
               <Button
                 onClick={handleDashboardAccess}
                 disabled={!hasShared}
-                className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white px-6"
+                className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white px-6 py-2 text-sm"
               >
                 {hasShared ? "Go to Dashboard" : "Share First to Unlock Dashboard"}
               </Button>
