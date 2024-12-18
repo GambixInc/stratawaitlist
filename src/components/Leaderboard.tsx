@@ -78,7 +78,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Trophy className="w-6 h-6 text-[#e57c73]" />
-          <h3 className="text-xl font-semibold">Top Players</h3>
+          <h3 className="text-xl font-semibold">Top Gambixers</h3>
         </div>
         <Button
           variant="ghost"
