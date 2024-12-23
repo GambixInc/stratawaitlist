@@ -11,41 +11,43 @@ interface ShareButtonProps {
 export const ShareButton = ({ shareUrl, shareText, onShare }: ShareButtonProps) => {
   const { toast } = useToast();
   
+  const defaultShareText = "🚀 Join me on Gambix! I'm #${referralCount} in line for early access to the future of website optimization. Skip the queue and get exclusive rewards using my referral link:";
+  
   const handleShare = async (platform: string) => {
     const url = shareUrl || window.location.href;
-    const text = shareText || "Check this out!";
+    const text = shareText || defaultShareText;
 
     switch (platform) {
       case 'twitter':
         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
         break;
       case 'linkedin':
-        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`);
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}&summary=${encodeURIComponent(text)}`);
         break;
       case 'facebook':
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`);
         break;
       default:
         try {
           if (navigator.share) {
             await navigator.share({
-              title: "Join the waitlist",
+              title: "Join Gambix Waitlist",
               text: text,
               url: url
             });
           } else {
-            await navigator.clipboard.writeText(url);
+            await navigator.clipboard.writeText(`${text}\n${url}`);
             toast({
               title: "Link copied!",
-              description: "Share it with your friends",
+              description: "Share it with your friends to climb the leaderboard and unlock exclusive rewards!",
+              className: "bg-black text-white border border-[#9b87f5]/20",
             });
           }
         } catch (err) {
-          console.log('Error sharing:', err);
+          console.error('Error sharing:', err);
         }
     }
     
-    // Call onShare callback if provided
     onShare?.();
   };
 

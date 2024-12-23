@@ -86,7 +86,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
           onClick={() => setIsVisible(false)}
           className="hover:bg-white/10"
         >
-          <X className="w-4 h-4" />
+          <X className="w-4 h-4 text-white" />
         </Button>
       </div>
       
