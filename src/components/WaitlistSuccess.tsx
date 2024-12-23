@@ -47,7 +47,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
     toast({
       title: "Link copied!",
       description: "Share it with your friends to climb the leaderboard and unlock exclusive rewards!",
-      className: "bg-black text-white border border-[#9b87f5]/20",
+      className: "bg-black text-white border border-brand/20",
     });
   };
 
@@ -58,7 +58,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
         variant: "destructive",
         title: "Error",
         description: "Could not find your email. Please try logging in manually.",
-        className: "bg-black text-white border border-[#9b87f5]/20",
+        className: "bg-black text-white border border-brand/20",
       });
       return;
     }
@@ -86,7 +86,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
       toast({
         title: "Success!",
         description: "You've been automatically signed in.",
-        className: "bg-black text-white border border-[#9b87f5]/20",
+        className: "bg-black text-white border border-brand/20",
       });
 
       navigate('/dashboard');
@@ -96,7 +96,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
         variant: "destructive",
         title: "Error",
         description: "Failed to access dashboard. Please try again.",
-        className: "bg-black text-white border border-[#9b87f5]/20",
+        className: "bg-black text-white border border-brand/20",
       });
     }
   };
@@ -106,7 +106,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
     toast({
       title: "Welcome!",
       description: "You've skipped the waitlist. Enjoy early access!",
-      className: "bg-black text-white border border-[#9b87f5]/20",
+      className: "bg-black text-white border border-brand/20",
     });
   };
 
@@ -148,13 +148,13 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
                 <Button
                   onClick={handleDashboardAccess}
                   disabled={!hasShared}
-                  className="bg-[#9b87f5] hover:bg-[#9b87f5]/90 text-white px-6 py-2 text-sm"
+                  className="bg-brand hover:bg-brand-hover text-white px-6 py-2 text-sm"
                 >
                   {hasShared ? "Go to Dashboard" : "Share First to Unlock Dashboard"}
                 </Button>
                 <Button
                   onClick={handleSkipWait}
-                  className="bg-transparent hover:bg-[#9b87f5]/10 text-white border-2 border-[#9b87f5] px-6 py-2 text-sm backdrop-blur-sm"
+                  className="bg-transparent hover:bg-brand/10 text-white border-2 border-brand px-6 py-2 text-sm backdrop-blur-sm"
                 >
                   Skip the Wait
                 </Button>
