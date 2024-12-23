@@ -60,7 +60,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
   return (
     <div className="bg-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/10">
-      <h2 className="text-3xl font-bold mb-6 text-[#e57c73]">
+      <h2 className="text-3xl font-bold mb-6 text-brand">
         Welcome Back
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -86,7 +86,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         </div>
         <Button 
           type="submit"
-          className="w-full bg-[#e57c73] hover:bg-[#e57c73]/90 text-white"
+          className="w-full bg-brand hover:bg-brand-hover text-white"
           disabled={isLoading}
         >
           {isLoading ? "Checking..." : "Get Started"}

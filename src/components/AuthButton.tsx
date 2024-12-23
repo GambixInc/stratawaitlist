@@ -55,13 +55,13 @@ export const AuthButton = () => {
     <>
       <Button
         onClick={isAuthenticated ? handleLogout : () => setShowLoginForm(true)}
-        className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white"
+        className="bg-brand hover:bg-brand-hover text-white"
       >
         {isAuthenticated ? 'Logout' : 'Login'}
       </Button>
 
       <Dialog open={showLoginForm} onOpenChange={setShowLoginForm}>
-        <DialogContent className="bg-black border-[#e57c73] text-white">
+        <DialogContent className="bg-black border-brand text-white">
           <DialogHeader>
             <DialogTitle>Login</DialogTitle>
           </DialogHeader>
