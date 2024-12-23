@@ -11,10 +11,20 @@ interface ShareButtonProps {
 export const ShareButton = ({ shareUrl, shareText, onShare }: ShareButtonProps) => {
   const { toast } = useToast();
   
-  const defaultShareText = "🚀 Join me on Gambix! I'm #${referralCount} in line for early access to the future of website optimization. Skip the queue and get exclusive rewards using my referral link:";
+  const getShareUrl = (url: string, platform: string) => {
+    const baseUrl = url || window.location.href;
+    const utmParams = new URLSearchParams({
+      utm_source: platform,
+      utm_medium: 'referral',
+      utm_campaign: 'waitlist_share'
+    });
+    return `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}${utmParams.toString()}`;
+  };
+
+  const defaultShareText = "🚀 Join me on Gambix! I'm already in line for early access to the future of website optimization. Skip the queue and get exclusive rewards using my referral link:";
   
   const handleShare = async (platform: string) => {
-    const url = shareUrl || window.location.href;
+    const url = getShareUrl(shareUrl || window.location.href, platform);
     const text = shareText || defaultShareText;
 
     switch (platform) {
@@ -40,7 +50,7 @@ export const ShareButton = ({ shareUrl, shareText, onShare }: ShareButtonProps) 
             toast({
               title: "Link copied!",
               description: "Share it with your friends to climb the leaderboard and unlock exclusive rewards!",
-              className: "bg-black text-white border border-[#9b87f5]/20",
+              className: "bg-black text-white border border-brand/20",
             });
           }
         } catch (err) {

@@ -8,21 +8,39 @@
     <!-- Primary Meta Tags -->
     <title>Gambix - Join the Future of Website Optimization</title>
     <meta name="title" content="Gambix - Join the Future of Website Optimization" />
-    <meta name="description" content="Get early access to the next generation of website optimization. Join our exclusive waitlist and unlock rewards!" />
+    <meta name="description" content="Skip the queue and get early access! Join our exclusive waitlist, earn points, and unlock amazing rewards. Already #1 among developers!" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://gambix.com/" />
-    <meta property="og:title" content="Gambix - Join the Future of Website Optimization" />
-    <meta property="og:description" content="Get early access to the next generation of website optimization. Join our exclusive waitlist and unlock rewards!" />
+    <meta property="og:title" content="Gambix - Skip the Queue, Get Early Access!" />
+    <meta property="og:description" content="Join our exclusive waitlist, earn points, and unlock amazing rewards. Use my referral link to boost your position! 🚀" />
     <meta property="og:image" content="/og-image.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://gambix.com/" />
-    <meta property="twitter:title" content="Gambix - Join the Future of Website Optimization" />
-    <meta property="twitter:description" content="Get early access to the next generation of website optimization. Join our exclusive waitlist and unlock rewards!" />
+    <meta property="twitter:title" content="Gambix - Skip the Queue, Get Early Access!" />
+    <meta property="twitter:description" content="Join our exclusive waitlist, earn points, and unlock amazing rewards. Use my referral link to boost your position! 🚀" />
     <meta property="twitter:image" content="/og-image.png" />
+
+    <!-- UTM Parameter Support -->
+    <script>
+      window.addEventListener('load', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const utmSource = urlParams.get('utm_source');
+        const utmMedium = urlParams.get('utm_medium');
+        const utmCampaign = urlParams.get('utm_campaign');
+        if (utmSource || utmMedium || utmCampaign) {
+          localStorage.setItem('utm_data', JSON.stringify({
+            source: utmSource,
+            medium: utmMedium,
+            campaign: utmCampaign,
+            timestamp: new Date().toISOString()
+          }));
+        }
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

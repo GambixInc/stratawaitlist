@@ -30,10 +30,10 @@ export const LeaderboardEntry = ({ entry, index, isCurrentUser }: LeaderboardEnt
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="text-sm bg-white/10 px-2 py-1 rounded">
+        <span className="text-sm bg-brand/10 px-2 py-1 rounded">
           {entry.points} points
         </span>
-        <span className="text-sm bg-white/10 px-2 py-1 rounded">
+        <span className="text-sm bg-brand/10 px-2 py-1 rounded">
           {entry.referral_count} refs
         </span>
       </div>

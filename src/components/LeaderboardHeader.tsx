@@ -16,9 +16,9 @@ export const LeaderboardHeader = ({ onClose }: LeaderboardHeaderProps) => {
         variant="ghost"
         size="icon"
         onClick={onClose}
-        className="hover:bg-white/10"
+        className="hover:bg-brand/10 text-white"
       >
-        <X className="w-4 h-4 text-white" />
+        <X className="w-4 h-4" />
       </Button>
     </div>
   );
