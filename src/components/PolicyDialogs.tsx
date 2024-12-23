@@ -1,4 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { X } from "lucide-react";
 
 export const PolicyDialogs = () => {
   const privacyPolicyContent = `Privacy Policy
@@ -162,9 +163,14 @@ For any questions about these terms, please contact legal@gambix.com`;
     <div className="flex gap-4">
       <Dialog>
         <DialogTrigger className="hover:text-white/70">Privacy Policy</DialogTrigger>
-        <DialogContent className="max-w-2xl bg-black/90 backdrop-blur-lg border-[#e57c73]/20">
+        <DialogContent className="max-w-2xl bg-black/90 backdrop-blur-lg border-[#9b87f5]/20">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white">Privacy Policy</DialogTitle>
+            <div className="flex justify-between items-center">
+              <DialogTitle className="text-2xl font-bold text-white">Privacy Policy</DialogTitle>
+              <button className="text-[#9b87f5] hover:text-[#9b87f5]/80">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
             <DialogDescription>
               <div className="mt-4 max-h-[60vh] overflow-y-auto text-white/90 whitespace-pre-wrap pr-4">
                 {privacyPolicyContent}
@@ -176,9 +182,14 @@ For any questions about these terms, please contact legal@gambix.com`;
 
       <Dialog>
         <DialogTrigger className="hover:text-white/70">Cookie Policy</DialogTrigger>
-        <DialogContent className="max-w-2xl bg-black/90 backdrop-blur-lg border-[#e57c73]/20">
+        <DialogContent className="max-w-2xl bg-black/90 backdrop-blur-lg border-[#9b87f5]/20">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white">Cookie Policy</DialogTitle>
+            <div className="flex justify-between items-center">
+              <DialogTitle className="text-2xl font-bold text-white">Cookie Policy</DialogTitle>
+              <button className="text-[#9b87f5] hover:text-[#9b87f5]/80">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
             <DialogDescription>
               <div className="mt-4 max-h-[60vh] overflow-y-auto text-white/90 whitespace-pre-wrap pr-4">
                 {cookiePolicyContent}
@@ -190,9 +201,14 @@ For any questions about these terms, please contact legal@gambix.com`;
 
       <Dialog>
         <DialogTrigger className="hover:text-white/70">Terms of Service</DialogTrigger>
-        <DialogContent className="max-w-2xl bg-black/90 backdrop-blur-lg border-[#e57c73]/20">
+        <DialogContent className="max-w-2xl bg-black/90 backdrop-blur-lg border-[#9b87f5]/20">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white">Terms of Service</DialogTitle>
+            <div className="flex justify-between items-center">
+              <DialogTitle className="text-2xl font-bold text-white">Terms of Service</DialogTitle>
+              <button className="text-[#9b87f5] hover:text-[#9b87f5]/80">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
             <DialogDescription>
               <div className="mt-4 max-h-[60vh] overflow-y-auto text-white/90 whitespace-pre-wrap pr-4">
                 {termsContent}

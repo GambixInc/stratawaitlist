@@ -33,7 +33,6 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
       }
 
       setReferralCount(data.referral_count || 0);
-      // Store email for later use in sign in
       if (data.email) {
         localStorage.setItem('waitlist_email', data.email);
       }
@@ -47,7 +46,8 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
     setHasShared(true);
     toast({
       title: "Link copied!",
-      description: "Share it with your friends",
+      description: "Share it with your friends to climb the leaderboard and unlock exclusive rewards!",
+      className: "bg-black text-white border border-[#9b87f5]/20",
     });
   };
 
@@ -58,15 +58,14 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
         variant: "destructive",
         title: "Error",
         description: "Could not find your email. Please try logging in manually.",
+        className: "bg-black text-white border border-[#9b87f5]/20",
       });
       return;
     }
 
     try {
-      // Generate a random password for the user
       const password = Math.random().toString(36).slice(-12);
       
-      // Try to create the user first
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
@@ -77,7 +76,6 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
         }
       });
 
-      // If user already exists or after creation, sign them in
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -85,10 +83,10 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
 
       if (signInError) throw signInError;
 
-      // Show success toast
       toast({
         title: "Success!",
         description: "You've been automatically signed in.",
+        className: "bg-black text-white border border-[#9b87f5]/20",
       });
 
       navigate('/dashboard');
@@ -98,8 +96,18 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
         variant: "destructive",
         title: "Error",
         description: "Failed to access dashboard. Please try again.",
+        className: "bg-black text-white border border-[#9b87f5]/20",
       });
     }
+  };
+
+  const handleSkipWait = () => {
+    navigate('/dashboard');
+    toast({
+      title: "Welcome!",
+      description: "You've skipped the waitlist. Enjoy early access!",
+      className: "bg-black text-white border border-[#9b87f5]/20",
+    });
   };
 
   return (
@@ -133,16 +141,24 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
             <div className="flex flex-col gap-4 items-center">
               <ShareButton 
                 shareUrl={referralLink} 
-                shareText="Join me on the waitlist for this exciting new platform!"
+                shareText="Join me on the waitlist for this exciting new platform! Get early access and exclusive rewards 🚀"
                 onShare={() => setHasShared(true)}
               />
-              <Button
-                onClick={handleDashboardAccess}
-                disabled={!hasShared}
-                className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white px-6 py-2 text-sm"
-              >
-                {hasShared ? "Go to Dashboard" : "Share First to Unlock Dashboard"}
-              </Button>
+              <div className="flex gap-4">
+                <Button
+                  onClick={handleDashboardAccess}
+                  disabled={!hasShared}
+                  className="bg-[#9b87f5] hover:bg-[#9b87f5]/90 text-white px-6 py-2 text-sm"
+                >
+                  {hasShared ? "Go to Dashboard" : "Share First to Unlock Dashboard"}
+                </Button>
+                <Button
+                  onClick={handleSkipWait}
+                  className="bg-transparent hover:bg-[#9b87f5]/10 text-white border-2 border-[#9b87f5] px-6 py-2 text-sm backdrop-blur-sm"
+                >
+                  Skip the Wait
+                </Button>
+              </div>
             </div>
           </div>
         )}

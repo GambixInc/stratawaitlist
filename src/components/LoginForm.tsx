@@ -30,6 +30,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           variant: "destructive",
           title: "Access Denied",
           description: "Please join our waitlist first to gain access.",
+          className: "bg-black text-white border border-[#9b87f5]/20",
         });
         navigate('/');
         return;
@@ -38,6 +39,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       toast({
         title: `Welcome back, ${fullName}!`,
         description: "Successfully logged in.",
+        className: "bg-black text-white border border-[#9b87f5]/20",
       });
 
       if (onSuccess) {
@@ -49,6 +51,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         variant: "destructive",
         title: "Error",
         description: "Something went wrong. Please try again.",
+        className: "bg-black text-white border border-[#9b87f5]/20",
       });
     } finally {
       setIsLoading(false);
