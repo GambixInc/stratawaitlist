@@ -52,52 +52,68 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
   };
 
   const handleDashboardAccess = async () => {
-    const email = localStorage.getItem('waitlist_email');
-    if (!email) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Could not find your email. Please try logging in manually.",
-        className: "bg-black text-white border border-brand/20",
-      });
-      return;
-    }
-
     try {
-      const password = Math.random().toString(36).slice(-12);
+      const email = localStorage.getItem('waitlist_email');
+      if (!email) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Could not find your email. Please try logging in manually.",
+          className: "bg-black text-white border border-brand/20",
+        });
+        return;
+      }
+
+      // First check if user already exists
+      const { data: { session } } = await supabase.auth.getSession();
       
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            waitlist_id: userId
+      if (!session) {
+        // Generate a secure password
+        const password = Math.random().toString(36).slice(-12);
+        
+        // Sign up the user
+        const { error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              waitlist_id: userId
+            }
+          }
+        });
+
+        if (signUpError) {
+          // If user already exists, try signing in
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (signInError) {
+            throw signInError;
           }
         }
-      });
+      }
 
-      if (signUpError) throw signUpError;
-
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (signInError) throw signInError;
-
-      toast({
-        title: "Success!",
-        description: "You've been automatically signed in.",
-        className: "bg-black text-white border border-brand/20",
-      });
-
-      navigate('/dashboard');
+      // At this point, user should be authenticated
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      
+      if (currentSession) {
+        toast({
+          title: "Success!",
+          description: "You've been automatically signed in.",
+          className: "bg-black text-white border border-brand/20",
+        });
+        navigate('/dashboard');
+      } else {
+        throw new Error('Failed to authenticate');
+      }
     } catch (error) {
       console.error('Error:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to access dashboard. Please try again.",
+        description: "Failed to access dashboard. Please try logging in manually.",
         className: "bg-black text-white border border-brand/20",
       });
     }
