@@ -23,7 +23,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
     const fetchReferralCount = async () => {
       const { data, error } = await supabase
         .from("waitlist")
-        .select("referral_count, email")
+        .select("referral_count, email, first_name, last_name")
         .eq("id", userId)
         .single();
 
@@ -35,6 +35,9 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
       setReferralCount(data.referral_count || 0);
       if (data.email) {
         localStorage.setItem('waitlist_email', data.email);
+        localStorage.setItem('waitlist_id', userId);
+        localStorage.setItem('first_name', data.first_name);
+        localStorage.setItem('last_name', data.last_name);
       }
     };
 
@@ -54,11 +57,14 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
   const handleDashboardAccess = async () => {
     try {
       const email = localStorage.getItem('waitlist_email');
-      if (!email) {
+      const firstName = localStorage.getItem('first_name');
+      const lastName = localStorage.getItem('last_name');
+      
+      if (!email || !firstName || !lastName) {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Could not find your email. Please try logging in manually.",
+          description: "Could not find your information. Please try logging in manually.",
           className: "bg-black text-white border border-brand/20",
         });
         return;
@@ -77,7 +83,9 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
           password,
           options: {
             data: {
-              waitlist_id: userId
+              waitlist_id: userId,
+              first_name: firstName,
+              last_name: lastName
             }
           }
         });
