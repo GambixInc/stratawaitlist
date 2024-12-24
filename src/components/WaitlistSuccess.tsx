@@ -76,6 +76,8 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
         }
       });
 
+      if (signUpError) throw signUpError;
+
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -102,7 +104,7 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
   };
 
   const handleSkipWait = () => {
-    navigate('/dashboard');
+    handleDashboardAccess();
     toast({
       title: "Welcome!",
       description: "You've skipped the waitlist. Enjoy early access!",
@@ -148,13 +150,13 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
                 <Button
                   onClick={handleDashboardAccess}
                   disabled={!hasShared}
-                  className="bg-brand hover:bg-brand-hover text-white px-6 py-2 text-sm"
+                  className="bg-[#e57c73] hover:bg-[#e57c73]/80 text-white px-6 py-2 text-sm"
                 >
                   {hasShared ? "Go to Dashboard" : "Share First to Unlock Dashboard"}
                 </Button>
                 <Button
                   onClick={handleSkipWait}
-                  className="bg-transparent hover:bg-brand/10 text-white border-2 border-brand px-6 py-2 text-sm backdrop-blur-sm"
+                  className="bg-transparent hover:bg-[#e57c73]/10 text-white border-2 border-[#e57c73] px-6 py-2 text-sm backdrop-blur-sm"
                 >
                   Skip the Wait
                 </Button>
