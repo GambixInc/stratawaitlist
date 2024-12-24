@@ -111,9 +111,10 @@ export type Database = {
           badges: Json | null
           created_at: string
           email: string
-          full_name: string
+          first_name: string
           id: string
           is_premium: boolean | null
+          last_name: string
           last_referral_at: string | null
           milestones: Json | null
           payment_status: string | null
@@ -128,9 +129,10 @@ export type Database = {
           badges?: Json | null
           created_at?: string
           email: string
-          full_name: string
+          first_name: string
           id?: string
           is_premium?: boolean | null
+          last_name: string
           last_referral_at?: string | null
           milestones?: Json | null
           payment_status?: string | null
@@ -145,9 +147,10 @@ export type Database = {
           badges?: Json | null
           created_at?: string
           email?: string
-          full_name?: string
+          first_name?: string
           id?: string
           is_premium?: boolean | null
+          last_name?: string
           last_referral_at?: string | null
           milestones?: Json | null
           payment_status?: string | null

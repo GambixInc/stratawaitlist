@@ -119,15 +119,6 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
     }
   };
 
-  const handleSkipWait = () => {
-    handleDashboardAccess();
-    toast({
-      title: "Welcome!",
-      description: "You've skipped the waitlist. Enjoy early access!",
-      className: "bg-black text-white border border-brand/20",
-    });
-  };
-
   return (
     <div className="animate-fade-in space-y-8">
       <div className="space-y-6">
@@ -162,21 +153,13 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
                 shareText="Join me on the waitlist for this exciting new platform! Get early access and exclusive rewards 🚀"
                 onShare={() => setHasShared(true)}
               />
-              <div className="flex gap-4">
-                <Button
-                  onClick={handleDashboardAccess}
-                  disabled={!hasShared}
-                  className="bg-[#e57c73] hover:bg-[#e57c73]/80 text-white px-6 py-2 text-sm"
-                >
-                  {hasShared ? "Go to Dashboard" : "Share First to Unlock Dashboard"}
-                </Button>
-                <Button
-                  onClick={handleSkipWait}
-                  className="bg-transparent hover:bg-[#e57c73]/10 text-white border-2 border-[#e57c73] px-6 py-2 text-sm backdrop-blur-sm"
-                >
-                  Skip the Wait
-                </Button>
-              </div>
+              <Button
+                onClick={handleDashboardAccess}
+                disabled={!hasShared}
+                className="bg-[#e57c73] hover:bg-[#e57c73]/80 text-white px-6 py-2 text-sm"
+              >
+                {hasShared ? "Go to Dashboard" : "Share First to Unlock Dashboard"}
+              </Button>
             </div>
           </div>
         )}

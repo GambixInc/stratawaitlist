@@ -9,6 +9,8 @@ interface LeaderboardEntryProps {
 }
 
 export const LeaderboardEntry = ({ entry, index, isCurrentUser }: LeaderboardEntryProps) => {
+  const fullName = `${entry.first_name} ${entry.last_name}`;
+  
   return (
     <div
       className={cn(
@@ -23,7 +25,7 @@ export const LeaderboardEntry = ({ entry, index, isCurrentUser }: LeaderboardEnt
           {index + 1}
         </span>
         <div className="flex items-center gap-2">
-          <span className="font-medium">{entry.full_name}</span>
+          <span className="font-medium">{fullName}</span>
           {index < 3 && (
             <Crown className="w-4 h-4 text-brand" />
           )}

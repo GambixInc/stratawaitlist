@@ -11,7 +11,8 @@ import { LeaderboardHeader } from "./LeaderboardHeader";
 
 export type LeaderboardEntryType = {
   id: string;
-  full_name: string;
+  first_name: string;
+  last_name: string;
   referral_count: number;
   created_at: string;
   tier_level: number;
@@ -48,7 +49,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("waitlist")
-        .select("id, full_name, referral_count, created_at, tier_level, points")
+        .select("id, first_name, last_name, referral_count, created_at, tier_level, points")
         .order("points", { ascending: false })
         .limit(10);
 
