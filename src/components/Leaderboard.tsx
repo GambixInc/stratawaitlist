@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { cn } from "@/lib/utils";
 import { Trophy } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
 import { useState, useEffect } from "react";
@@ -8,6 +7,7 @@ import { Button } from "./ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { LeaderboardEntry } from "./LeaderboardEntry";
 import { LeaderboardHeader } from "./LeaderboardHeader";
+import { LeaderboardPlaceholder } from "./LeaderboardPlaceholder";
 import { useToast } from "@/hooks/use-toast";
 
 export type LeaderboardEntryType = {
@@ -25,7 +25,9 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
+  // Set up real-time subscription
   useEffect(() => {
+    console.log('Setting up real-time leaderboard subscription');
     const channel = supabase
       .channel('schema-db-changes')
       .on(
@@ -36,13 +38,14 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
           table: 'waitlist'
         },
         (payload) => {
-          console.log('Realtime update:', payload);
+          console.log('Realtime leaderboard update:', payload);
           queryClient.invalidateQueries({ queryKey: ['leaderboard'] });
         }
       )
       .subscribe();
 
     return () => {
+      console.log('Cleaning up leaderboard subscription');
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
@@ -50,6 +53,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
   const { data: leaderboard, isLoading, error } = useQuery({
     queryKey: ["leaderboard"],
     queryFn: async () => {
+      console.log('Fetching leaderboard data');
       try {
         const { data, error } = await supabase
           .from("waitlist")
@@ -57,7 +61,12 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
           .order("points", { ascending: false })
           .limit(10);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Leaderboard fetch error:', error);
+          throw error;
+        }
+        
+        console.log('Leaderboard data fetched:', data);
         return data as LeaderboardEntryType[];
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
@@ -96,6 +105,9 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
     );
   }
 
+  // Calculate how many placeholder rows we need
+  const placeholderCount = Math.max(0, 10 - (leaderboard?.length || 0));
+
   return (
     <div className="w-full max-w-md mx-auto bg-white/10 backdrop-blur-lg rounded-xl p-6">
       <LeaderboardHeader onClose={() => setIsVisible(false)} />
@@ -109,6 +121,9 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
               index={index}
               isCurrentUser={entry.id === currentUserId}
             />
+          ))}
+          {Array.from({ length: placeholderCount }).map((_, index) => (
+            <LeaderboardPlaceholder key={`placeholder-${index}`} />
           ))}
         </div>
       </ScrollArea>

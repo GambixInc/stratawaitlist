@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import confetti from "canvas-confetti";
 import { WaitlistFormInputs } from "./WaitlistFormInputs";
 import { WaitlistSuccess } from "./WaitlistSuccess";
 import { useSearchParams } from "react-router-dom";
-import { Button } from "./ui/button";
+import { GoogleSignInButton } from "./GoogleSignInButton";
 
 export const WaitlistForm = () => {
   const [firstName, setFirstName] = useState("");
@@ -17,38 +16,16 @@ export const WaitlistForm = () => {
   const [searchParams] = useSearchParams();
   const referralCode = searchParams.get("ref");
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
-          redirectTo: `${window.location.origin}/dashboard`
-        }
-      });
-
-      if (error) throw error;
-    } catch (error) {
-      console.error('Error:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to sign in with Google. Please try again.",
-        className: "bg-black text-white border border-brand/20",
-      });
-    }
-  };
-
   useEffect(() => {
     // Listen for auth state changes
+    console.log('Setting up auth state listener');
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, !!session);
       if (event === 'SIGNED_IN' && session?.user) {
         try {
           // Get user details from Google auth
           const { user } = session;
+          console.log('User signed in:', user);
           const firstName = user.user_metadata.full_name?.split(' ')[0] || '';
           const lastName = user.user_metadata.full_name?.split(' ').slice(1).join(' ') || '';
           const email = user.email || '';
@@ -61,14 +38,17 @@ export const WaitlistForm = () => {
             .maybeSingle();
 
           if (existingUser) {
+            console.log('User already exists in waitlist:', existingUser);
             // User already exists, update localStorage
             localStorage.setItem('waitlist_id', existingUser.id);
             localStorage.setItem('waitlist_email', email);
             localStorage.setItem('first_name', firstName);
             localStorage.setItem('last_name', lastName);
+            setSubmittedUserId(existingUser.id);
             return;
           }
 
+          console.log('Adding new user to waitlist');
           // Add user to waitlist
           const { data: waitlistEntry, error: waitlistError } = await supabase
             .from('waitlist')
@@ -87,17 +67,12 @@ export const WaitlistForm = () => {
           if (waitlistError) throw waitlistError;
 
           if (waitlistEntry) {
+            console.log('User added to waitlist:', waitlistEntry);
             localStorage.setItem('waitlist_id', waitlistEntry.id);
             localStorage.setItem('waitlist_email', email);
             localStorage.setItem('first_name', firstName);
             localStorage.setItem('last_name', lastName);
             setSubmittedUserId(waitlistEntry.id);
-
-            confetti({
-              particleCount: 100,
-              spread: 70,
-              origin: { y: 0.6 },
-            });
 
             toast({
               title: "Welcome to the waitlist!",
@@ -118,6 +93,7 @@ export const WaitlistForm = () => {
     });
 
     return () => {
+      console.log('Cleaning up auth state listener');
       subscription.unsubscribe();
     };
   }, [referralCode, toast]);
@@ -125,11 +101,13 @@ export const WaitlistForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    console.log('Submitting waitlist form');
 
     try {
       // First, check if the referral code is valid
       let referredBy = null;
       if (referralCode) {
+        console.log('Checking referral code:', referralCode);
         const { data: referrer } = await supabase
           .from("waitlist")
           .select("id, referral_count")
@@ -143,9 +121,11 @@ export const WaitlistForm = () => {
             .from("waitlist")
             .update({ referral_count: (referrer.referral_count || 0) + 1 })
             .eq("id", referrer.id);
+          console.log('Updated referrer count');
         }
       }
 
+      console.log('Adding new user to waitlist');
       const { data, error } = await supabase
         .from("waitlist")
         .insert([
@@ -162,12 +142,7 @@ export const WaitlistForm = () => {
 
       if (error) throw error;
 
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-
+      console.log('User added successfully:', data);
       setSubmittedUserId(data.id);
       
       toast({
@@ -194,43 +169,34 @@ export const WaitlistForm = () => {
 
   return (
     <div className="space-y-8">
-      <div className="space-y-6">
-        <Button
-          onClick={handleGoogleSignIn}
-          className="w-full bg-white hover:bg-gray-100 text-black flex items-center justify-center gap-2"
-          type="button"
-        >
-          <img 
-            src="https://www.google.com/favicon.ico" 
-            alt="Google" 
-            className="w-4 h-4"
-          />
-          Join with Google
-        </Button>
-        
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-white/10" />
+      {!submittedUserId ? (
+        <div className="space-y-6">
+          <GoogleSignInButton />
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-white/10" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-black px-2 text-white/50">Or continue with email</span>
+            </div>
           </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-black px-2 text-white/50">Or continue with email</span>
-          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <WaitlistFormInputs
+              firstName={firstName}
+              lastName={lastName}
+              email={email}
+              isSubmitting={isSubmitting}
+              onFirstNameChange={setFirstName}
+              onLastNameChange={setLastName}
+              onEmailChange={setEmail}
+            />
+          </form>
         </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <WaitlistFormInputs
-            firstName={firstName}
-            lastName={lastName}
-            email={email}
-            isSubmitting={isSubmitting}
-            onFirstNameChange={setFirstName}
-            onLastNameChange={setLastName}
-            onEmailChange={setEmail}
-          />
-        </form>
-      </div>
-
-      {submittedUserId && <WaitlistSuccess userId={submittedUserId} />}
+      ) : (
+        <WaitlistSuccess userId={submittedUserId} />
+      )}
     </div>
   );
 };
