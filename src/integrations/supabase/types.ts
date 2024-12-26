@@ -9,6 +9,41 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          metadata: Json | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          status: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "waitlist"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       referral_rewards: {
         Row: {
           created_at: string
@@ -76,10 +111,13 @@ export type Database = {
           badges: Json | null
           created_at: string
           email: string
-          full_name: string
+          first_name: string
           id: string
+          is_premium: boolean | null
+          last_name: string
           last_referral_at: string | null
           milestones: Json | null
+          payment_status: string | null
           points: number | null
           referral_count: number | null
           referral_link: string | null
@@ -91,10 +129,13 @@ export type Database = {
           badges?: Json | null
           created_at?: string
           email: string
-          full_name: string
+          first_name: string
           id?: string
+          is_premium?: boolean | null
+          last_name: string
           last_referral_at?: string | null
           milestones?: Json | null
+          payment_status?: string | null
           points?: number | null
           referral_count?: number | null
           referral_link?: string | null
@@ -106,10 +147,13 @@ export type Database = {
           badges?: Json | null
           created_at?: string
           email?: string
-          full_name?: string
+          first_name?: string
           id?: string
+          is_premium?: boolean | null
+          last_name?: string
           last_referral_at?: string | null
           milestones?: Json | null
+          payment_status?: string | null
           points?: number | null
           referral_count?: number | null
           referral_link?: string | null

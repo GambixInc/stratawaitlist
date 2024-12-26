@@ -9,7 +9,8 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export type LeaderboardEntry = {
   id: string;
-  full_name: string;
+  first_name: string;
+  last_name: string;
   referral_count: number;
   created_at: string;
   tier_level: number;
@@ -48,7 +49,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("waitlist")
-        .select("id, full_name, referral_count, created_at, tier_level, points")
+        .select("id, first_name, last_name, referral_count, created_at, tier_level, points")
         .order("points", { ascending: false })
         .limit(10);
 
@@ -107,7 +108,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
                   {index + 1}
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="font-medium">{entry.full_name}</span>
+                  <span className="font-medium">{`${entry.first_name} ${entry.last_name}`}</span>
                   {index < 3 && (
                     <Crown className={cn("w-4 h-4 text-[#e57c73]")} />
                   )}
