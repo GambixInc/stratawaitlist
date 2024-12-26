@@ -10,40 +10,64 @@ export const AuthButton = () => {
   const navigate = useNavigate();
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   
   useEffect(() => {
     // Check initial session
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session);
-      
-      // If we're on the dashboard and not authenticated, redirect to home
-      if (!session && window.location.pathname === '/dashboard') {
-        navigate('/');
-        toast({
-          title: "Session expired",
-          description: "Please log in again to continue.",
-          className: "bg-black text-white border border-brand/20",
-        });
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        setIsAuthenticated(!!session);
+        
+        // If we're on the dashboard and not authenticated, redirect to home
+        if (!session && window.location.pathname === '/dashboard') {
+          navigate('/');
+          toast({
+            title: "Session expired",
+            description: "Please log in again to continue.",
+            className: "bg-black text-white border border-brand/20",
+          });
+        }
+      } catch (error) {
+        console.error("Session check error:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     
     checkSession();
 
     // Subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event, !!session);
       setIsAuthenticated(!!session);
       
       if (event === 'SIGNED_OUT') {
         navigate('/');
+        localStorage.clear(); // Clear all local storage data
         toast({
           title: "Logged out",
           description: "You have been successfully logged out.",
           className: "bg-black text-white border border-brand/20",
         });
       } else if (event === 'SIGNED_IN') {
+        // Get user details from waitlist if available
+        if (session?.user?.email) {
+          const { data: waitlistData } = await supabase
+            .from('waitlist')
+            .select('id, first_name, last_name')
+            .eq('email', session.user.email)
+            .single();
+
+          if (waitlistData) {
+            localStorage.setItem('waitlist_id', waitlistData.id);
+            localStorage.setItem('waitlist_email', session.user.email);
+            localStorage.setItem('first_name', waitlistData.first_name);
+            localStorage.setItem('last_name', waitlistData.last_name);
+          }
+        }
+
         navigate('/dashboard');
         toast({
           title: "Welcome back!",
@@ -72,6 +96,10 @@ export const AuthButton = () => {
       });
     }
   };
+
+  if (isLoading) {
+    return <Button disabled>Loading...</Button>;
+  }
 
   return (
     <>
