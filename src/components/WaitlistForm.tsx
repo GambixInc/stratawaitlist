@@ -7,8 +7,7 @@ import { WaitlistSuccess } from "./WaitlistSuccess";
 import { useSearchParams } from "react-router-dom";
 
 export const WaitlistForm = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedUserId, setSubmittedUserId] = useState<string>();
@@ -44,8 +43,7 @@ export const WaitlistForm = () => {
         .from("waitlist")
         .insert([
           {
-            first_name: firstName,
-            last_name: lastName,
+            full_name: fullName,
             email: email,
             referral_count: 0,
             referred_by: referredBy
@@ -69,8 +67,7 @@ export const WaitlistForm = () => {
         description: "Thank you for joining. Share with friends to climb the leaderboard!",
       });
 
-      setFirstName("");
-      setLastName("");
+      setFullName("");
       setEmail("");
     } catch (error) {
       console.error("Error:", error);
@@ -88,12 +85,10 @@ export const WaitlistForm = () => {
     <div className="space-y-8">
       <form onSubmit={handleSubmit} className="space-y-6">
         <WaitlistFormInputs
-          firstName={firstName}
-          lastName={lastName}
+          fullName={fullName}
           email={email}
           isSubmitting={isSubmitting}
-          onFirstNameChange={setFirstName}
-          onLastNameChange={setLastName}
+          onFullNameChange={setFullName}
           onEmailChange={setEmail}
         />
       </form>
