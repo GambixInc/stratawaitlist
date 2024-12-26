@@ -24,9 +24,14 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        brand: {
+          DEFAULT: "#e57c73",
+          hover: "#d66b62",
+          light: "rgba(229, 124, 115, 0.1)",
+        },
         primary: {
-          DEFAULT: "#4A90E2",
-          hover: "#357ABD",
+          DEFAULT: "#e57c73",
+          hover: "#d66b62",
         },
         secondary: {
           DEFAULT: "#E0E0E0",

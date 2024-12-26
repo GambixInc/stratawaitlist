@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { CountdownTimer } from "./CountdownTimer";
 import { RewardsProgress } from "./RewardsProgress";
-import { ShareButton } from "./ShareButton";
 import { supabase } from "@/lib/supabase";
-import { useNavigate } from "react-router-dom";
+import { ReferralSection } from "./waitlist/ReferralSection";
+import { AuthenticationHandler } from "./waitlist/AuthenticationHandler";
 
 interface WaitlistSuccessProps {
   userId: string;
@@ -15,14 +13,13 @@ interface WaitlistSuccessProps {
 export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
   const [referralLink] = useState(`${window.location.origin}/?ref=${userId}`);
   const [referralCount, setReferralCount] = useState(0);
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const [hasShared, setHasShared] = useState(false);
 
   useEffect(() => {
     const fetchReferralCount = async () => {
       const { data, error } = await supabase
         .from("waitlist")
-        .select("referral_count")
+        .select("referral_count, email, first_name, last_name")
         .eq("id", userId)
         .single();
 
@@ -32,18 +29,16 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
       }
 
       setReferralCount(data.referral_count || 0);
+      if (data.email) {
+        localStorage.setItem('waitlist_email', data.email);
+        localStorage.setItem('waitlist_id', userId);
+        localStorage.setItem('first_name', data.first_name);
+        localStorage.setItem('last_name', data.last_name);
+      }
     };
 
     fetchReferralCount();
   }, [userId]);
-
-  const handleCopyLink = async () => {
-    await navigator.clipboard.writeText(referralLink);
-    toast({
-      title: "Link copied!",
-      description: "Share it with your friends",
-    });
-  };
 
   return (
     <div className="animate-fade-in space-y-8">
@@ -52,35 +47,12 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
         
         {referralLink && (
           <div className="space-y-4">
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Share with friends</h3>
-              <p className="text-sm text-white/70">
-                Share your unique link to climb the leaderboard and unlock rewards!
-              </p>
-            </div>
-
-            <div className="flex gap-2">
-              <Input
-                value={referralLink}
-                readOnly
-                className="bg-white/5 backdrop-blur-xl border-white/10 text-white"
-              />
-              <Button
-                onClick={handleCopyLink}
-                className="bg-black hover:bg-black/80 text-white border border-white/10"
-              >
-                Copy
-              </Button>
-            </div>
-
+            <ReferralSection 
+              referralLink={referralLink}
+              onShare={() => setHasShared(true)}
+            />
             <div className="flex flex-col gap-4 items-center">
-              <ShareButton shareUrl={referralLink} shareText="Join me on the waitlist for this exciting new platform!" />
-              <Button
-                onClick={() => navigate('/dashboard')}
-                className="bg-[#e57c73] hover:bg-[#e57c73]/90 text-white w-full"
-              >
-                Go to Dashboard
-              </Button>
+              <AuthenticationHandler hasShared={hasShared} />
             </div>
           </div>
         )}
