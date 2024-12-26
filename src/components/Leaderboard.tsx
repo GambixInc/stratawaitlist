@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
-import { Trophy, Crown, X } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { LeaderboardEntry } from "./LeaderboardEntry";
 import { LeaderboardHeader } from "./LeaderboardHeader";
+import { useToast } from "@/hooks/use-toast";
 
 export type LeaderboardEntryType = {
   id: string;
@@ -22,6 +23,7 @@ export type LeaderboardEntryType = {
 export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
   const [isVisible, setIsVisible] = useState(true);
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   useEffect(() => {
     const channel = supabase
@@ -33,7 +35,8 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
           schema: 'public',
           table: 'waitlist'
         },
-        () => {
+        (payload) => {
+          console.log('Realtime update:', payload);
           queryClient.invalidateQueries({ queryKey: ['leaderboard'] });
         }
       )
@@ -44,17 +47,28 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
     };
   }, [queryClient]);
 
-  const { data: leaderboard, isLoading } = useQuery({
+  const { data: leaderboard, isLoading, error } = useQuery({
     queryKey: ["leaderboard"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("waitlist")
-        .select("id, first_name, last_name, referral_count, created_at, tier_level, points")
-        .order("points", { ascending: false })
-        .limit(10);
+      try {
+        const { data, error } = await supabase
+          .from("waitlist")
+          .select("id, first_name, last_name, referral_count, created_at, tier_level, points")
+          .order("points", { ascending: false })
+          .limit(10);
 
-      if (error) throw error;
-      return data as LeaderboardEntryType[];
+        if (error) throw error;
+        return data as LeaderboardEntryType[];
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load leaderboard data. Please try again.",
+          className: "bg-black text-white border border-brand/20",
+        });
+        throw error;
+      }
     },
   });
 
@@ -72,6 +86,14 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
 
   if (isLoading) {
     return <div className="text-center p-4">Loading leaderboard...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center p-4 text-red-500">
+        Failed to load leaderboard. Please try again.
+      </div>
+    );
   }
 
   return (
