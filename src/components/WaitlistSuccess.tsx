@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
 import { ShareButton } from "./ShareButton";
+import { Button } from "./ui/button";
 
 interface WaitlistSuccessProps {
   userId: string;
