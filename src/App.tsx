@@ -20,31 +20,8 @@ const queryClient = new QueryClient({
 
 function App() {
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsLoading(false);
-      
-      // If we have a session but no waitlist data, try to fetch it
-      if (session?.user?.email && !localStorage.getItem('waitlist_id')) {
-        supabase
-          .from('waitlist')
-          .select('id, first_name, last_name')
-          .eq('email', session.user.email)
-          .single()
-          .then(({ data: waitlistData }) => {
-            if (waitlistData) {
-              localStorage.setItem('waitlist_id', waitlistData.id);
-              localStorage.setItem('waitlist_email', session.user.email);
-              localStorage.setItem('first_name', waitlistData.first_name);
-              localStorage.setItem('last_name', waitlistData.last_name);
-            }
-          });
-      }
-    });
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN') {
         toast({
@@ -56,8 +33,6 @@ function App() {
           title: "Signed out",
           description: "You have been signed out successfully.",
         });
-        // Clear local storage on sign out
-        localStorage.clear();
       }
     });
 
@@ -65,10 +40,6 @@ function App() {
       subscription.unsubscribe();
     };
   }, [toast]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <QueryClientProvider client={queryClient}>
