@@ -22,12 +22,14 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
 
   const handleDashboardAccess = async () => {
     try {
+      console.log("Starting dashboard access process");
       const email = localStorage.getItem('waitlist_email');
       const firstName = localStorage.getItem('first_name');
       const lastName = localStorage.getItem('last_name');
       const waitlistId = localStorage.getItem('waitlist_id');
       
       if (!email || !firstName || !lastName || !waitlistId) {
+        console.error("Missing user information:", { email, firstName, lastName, waitlistId });
         toast({
           variant: "destructive",
           title: "Error",
@@ -38,6 +40,7 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
       }
 
       if (!validateEmail(email)) {
+        console.error("Invalid email:", email);
         toast({
           variant: "destructive",
           title: "Invalid Email",
@@ -51,10 +54,11 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
+        console.log("No existing session, creating new user");
         // Generate a secure random password (32 characters)
-        const randomBytes = new Uint8Array(24);
-        window.crypto.getRandomValues(randomBytes);
-        const password = Array.from(randomBytes)
+        const array = new Uint8Array(24);
+        crypto.getRandomValues(array);
+        const password = Array.from(array)
           .map(b => b.toString(16).padStart(2, '0'))
           .join('');
         
@@ -72,6 +76,7 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
         });
 
         if (signUpError) {
+          console.log("Sign up failed, attempting sign in", signUpError);
           // If user exists, try signing in
           const { error: signInError } = await supabase.auth.signInWithPassword({
             email,
@@ -79,6 +84,7 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
           });
 
           if (signInError) {
+            console.error("Sign in failed:", signInError);
             toast({
               variant: "destructive",
               title: "Authentication Error",
@@ -94,6 +100,7 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
       const { data: { session: currentSession } } = await supabase.auth.getSession();
       
       if (currentSession) {
+        console.log("Authentication successful, navigating to dashboard");
         toast({
           title: "Success!",
           description: "You've been automatically signed in.",
@@ -101,6 +108,7 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
         });
         navigate('/dashboard');
       } else {
+        console.error("No session after authentication attempt");
         toast({
           variant: "destructive",
           title: "Authentication Failed",
@@ -109,7 +117,7 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
         });
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Authentication error:', error);
       toast({
         variant: "destructive",
         title: "Error",

@@ -15,11 +15,13 @@ export const AuthButton = () => {
   useEffect(() => {
     // Check initial session
     const checkSession = async () => {
+      console.log("Checking initial session");
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
       
       // If we're on the dashboard and not authenticated, redirect to home
       if (!session && window.location.pathname === '/dashboard') {
+        console.log("No session found on dashboard, redirecting to home");
         navigate('/');
         toast({
           title: "Session expired",
@@ -37,6 +39,7 @@ export const AuthButton = () => {
       setIsAuthenticated(!!session);
       
       if (event === 'SIGNED_OUT') {
+        console.log("User signed out, navigating to home");
         navigate('/');
         toast({
           title: "Logged out",
@@ -44,6 +47,7 @@ export const AuthButton = () => {
           className: "bg-black text-white border border-brand/20",
         });
       } else if (event === 'SIGNED_IN') {
+        console.log("User signed in, navigating to dashboard");
         navigate('/dashboard');
         toast({
           title: "Welcome back!",
@@ -60,6 +64,7 @@ export const AuthButton = () => {
 
   const handleLogout = async () => {
     try {
+      console.log("Initiating logout");
       await supabase.auth.signOut();
       setIsAuthenticated(false);
     } catch (error) {

@@ -22,7 +22,9 @@ function App() {
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log("Setting up auth state change listener");
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed in App:", event, !!session);
       if (event === 'SIGNED_IN') {
         toast({
           title: "Welcome back!",
@@ -68,14 +70,17 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("Checking session in ProtectedRoute");
     // Check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Session check result:", !!session);
       setSession(session);
       setLoading(false);
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed in ProtectedRoute:", !!session);
       setSession(session);
       setLoading(false);
     });
@@ -88,6 +93,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!session) {
+    console.log("No session found, redirecting to home");
     return <Navigate to="/" replace />;
   }
 
