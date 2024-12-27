@@ -12,9 +12,35 @@ export const WaitlistForm = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedUserId, setSubmittedUserId] = useState<string>();
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const referralCode = searchParams.get("ref");
+
+  useEffect(() => {
+    const checkExistingUser = async () => {
+      // Check if we have stored waitlist info
+      const storedEmail = localStorage.getItem('waitlist_email');
+      const storedId = localStorage.getItem('waitlist_id');
+      
+      if (storedEmail && storedId) {
+        // Verify the user exists in the waitlist
+        const { data: existingUser } = await supabase
+          .from("waitlist")
+          .select("id")
+          .eq("id", storedId)
+          .eq("email", storedEmail)
+          .single();
+
+        if (existingUser) {
+          setSubmittedUserId(existingUser.id);
+        }
+      }
+      setIsLoading(false);
+    };
+
+    checkExistingUser();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +83,7 @@ export const WaitlistForm = () => {
           title: "Already registered",
           description: "This email is already on the waitlist.",
         });
+        setSubmittedUserId(existingUser.id);
         return;
       }
 
@@ -90,6 +117,12 @@ export const WaitlistForm = () => {
         description: "Thank you for joining. Share with friends to climb the leaderboard!",
       });
 
+      // Store waitlist info
+      localStorage.setItem('waitlist_email', email);
+      localStorage.setItem('waitlist_id', data.id);
+      localStorage.setItem('first_name', firstName);
+      localStorage.setItem('last_name', lastName);
+
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -104,6 +137,10 @@ export const WaitlistForm = () => {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return <div className="text-center">Loading...</div>;
+  }
 
   return (
     <div className="space-y-8">
