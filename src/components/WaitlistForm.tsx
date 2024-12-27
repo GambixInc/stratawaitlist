@@ -26,18 +26,38 @@ export const WaitlistForm = () => {
       if (referralCode) {
         const { data: referrer } = await supabase
           .from("waitlist")
-          .select("id, referral_count")
+          .select("id, referral_count, points")
           .eq("referral_link", referralCode)
           .single();
 
         if (referrer) {
           referredBy = referralCode;
-          // Increment referrer's count
+          // Increment referrer's count and points
           await supabase
             .from("waitlist")
-            .update({ referral_count: (referrer.referral_count || 0) + 1 })
+            .update({ 
+              referral_count: (referrer.referral_count || 0) + 1,
+              points: (referrer.points || 0) + 10,
+              last_referral_at: new Date().toISOString()
+            })
             .eq("id", referrer.id);
         }
+      }
+
+      // Check if email already exists
+      const { data: existingUser } = await supabase
+        .from("waitlist")
+        .select("id")
+        .eq("email", email)
+        .single();
+
+      if (existingUser) {
+        toast({
+          variant: "destructive",
+          title: "Already registered",
+          description: "This email is already on the waitlist.",
+        });
+        return;
       }
 
       const { data, error } = await supabase
@@ -48,6 +68,7 @@ export const WaitlistForm = () => {
             last_name: lastName,
             email: email,
             referral_count: 0,
+            points: 0,
             referred_by: referredBy
           },
         ])
@@ -86,19 +107,21 @@ export const WaitlistForm = () => {
 
   return (
     <div className="space-y-8">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <WaitlistFormInputs
-          firstName={firstName}
-          lastName={lastName}
-          email={email}
-          isSubmitting={isSubmitting}
-          onFirstNameChange={setFirstName}
-          onLastNameChange={setLastName}
-          onEmailChange={setEmail}
-        />
-      </form>
-
-      {submittedUserId && <WaitlistSuccess userId={submittedUserId} />}
+      {!submittedUserId ? (
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <WaitlistFormInputs
+            firstName={firstName}
+            lastName={lastName}
+            email={email}
+            isSubmitting={isSubmitting}
+            onFirstNameChange={setFirstName}
+            onLastNameChange={setLastName}
+            onEmailChange={setEmail}
+          />
+        </form>
+      ) : (
+        <WaitlistSuccess userId={submittedUserId} />
+      )}
     </div>
   );
 };

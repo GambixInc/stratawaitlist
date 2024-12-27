@@ -54,7 +54,7 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
         .limit(10);
 
       if (error) throw error;
-      return data as LeaderboardEntryType[];
+      return (data || []) as LeaderboardEntryType[];
     },
   });
 
@@ -79,16 +79,22 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
       <LeaderboardHeader onClose={() => setIsVisible(false)} />
       
       <ScrollArea className="h-[300px] rounded-md">
-        <div className="space-y-2">
-          {leaderboard?.map((entry, index) => (
-            <LeaderboardEntry
-              key={entry.id}
-              entry={entry}
-              index={index}
-              isCurrentUser={entry.id === currentUserId}
-            />
-          ))}
-        </div>
+        {leaderboard && leaderboard.length > 0 ? (
+          <div className="space-y-2">
+            {leaderboard.map((entry, index) => (
+              <LeaderboardEntry
+                key={entry.id}
+                entry={entry}
+                index={index}
+                isCurrentUser={entry.id === currentUserId}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center p-4 text-white/70">
+            No entries yet. Be the first to join!
+          </div>
+        )}
       </ScrollArea>
     </div>
   );
