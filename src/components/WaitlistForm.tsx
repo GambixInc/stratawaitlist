@@ -47,7 +47,7 @@ export const WaitlistForm = () => {
     setIsSubmitting(true);
 
     try {
-      // First, check if the referral code is valid
+      // First, check if the referral code is valid and get referrer's info
       let referredBy = null;
       if (referralCode) {
         const { data: referrer } = await supabase
@@ -58,8 +58,9 @@ export const WaitlistForm = () => {
 
         if (referrer) {
           referredBy = referralCode;
-          // Increment referrer's count and points
-          await supabase
+          
+          // Update referrer's stats
+          const { error: updateError } = await supabase
             .from("waitlist")
             .update({ 
               referral_count: (referrer.referral_count || 0) + 1,
@@ -67,6 +68,15 @@ export const WaitlistForm = () => {
               last_referral_at: new Date().toISOString()
             })
             .eq("id", referrer.id);
+
+          if (updateError) {
+            console.error("Error updating referrer:", updateError);
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: "Failed to update referrer stats.",
+            });
+          }
         }
       }
 
@@ -87,6 +97,7 @@ export const WaitlistForm = () => {
         return;
       }
 
+      // Insert new waitlist entry
       const { data, error } = await supabase
         .from("waitlist")
         .insert([
