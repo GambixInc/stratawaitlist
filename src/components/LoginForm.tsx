@@ -30,9 +30,13 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         .eq("email", email)
         .eq("first_name", firstName)
         .eq("last_name", lastName)
-        .single();
+        .maybeSingle();
 
-      if (waitlistError || !waitlistUser) {
+      if (waitlistError) {
+        throw waitlistError;
+      }
+
+      if (!waitlistUser) {
         toast({
           variant: "destructive",
           title: "Access Denied",

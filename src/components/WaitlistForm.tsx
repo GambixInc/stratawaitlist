@@ -30,7 +30,7 @@ export const WaitlistForm = () => {
           .select("id")
           .eq("id", storedId)
           .eq("email", storedEmail)
-          .single();
+          .maybeSingle();
 
         if (existingUser) {
           setSubmittedUserId(existingUser.id);
@@ -54,7 +54,7 @@ export const WaitlistForm = () => {
           .from("waitlist")
           .select("id, referral_count, points")
           .eq("referral_link", referralCode)
-          .single();
+          .maybeSingle();
 
         if (referrer) {
           referredBy = referralCode;
@@ -75,7 +75,7 @@ export const WaitlistForm = () => {
         .from("waitlist")
         .select("id")
         .eq("email", email)
-        .single();
+        .maybeSingle();
 
       if (existingUser) {
         toast({
