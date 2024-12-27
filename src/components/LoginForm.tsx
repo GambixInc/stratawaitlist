@@ -19,7 +19,8 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase
+      // First check if user exists in waitlist
+      const { data: waitlistUser, error: waitlistError } = await supabase
         .from("waitlist")
         .select()
         .eq("email", email)
@@ -27,7 +28,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         .eq("last_name", lastName)
         .single();
 
-      if (error || !data) {
+      if (waitlistError || !waitlistUser) {
         toast({
           variant: "destructive",
           title: "Access Denied",
@@ -38,9 +39,43 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         return;
       }
 
-      // Store the waitlist ID for later use
-      localStorage.setItem('waitlist_id', data.id);
+      // Generate a secure password for the user (32 characters)
+      const array = new Uint8Array(24);
+      crypto.getRandomValues(array);
+      const password = Array.from(array)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+
+      // Try to sign up the user with Supabase Auth
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            waitlist_id: waitlistUser.id,
+            first_name: firstName,
+            last_name: lastName
+          }
+        }
+      });
+
+      if (signUpError) {
+        // If user exists, try signing in
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (signInError) {
+          throw signInError;
+        }
+      }
+
+      // Store waitlist info
+      localStorage.setItem('waitlist_id', waitlistUser.id);
       localStorage.setItem('waitlist_email', email);
+      localStorage.setItem('first_name', firstName);
+      localStorage.setItem('last_name', lastName);
 
       toast({
         title: `Welcome back, ${firstName}!`,
@@ -51,6 +86,8 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       if (onSuccess) {
         onSuccess();
       }
+      
+      // Navigate to dashboard
       navigate('/dashboard');
     } catch (error) {
       console.error("Login error:", error);
