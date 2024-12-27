@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { CountdownTimer } from "./CountdownTimer";
 import { RewardsProgress } from "./RewardsProgress";
 import { supabase } from "@/lib/supabase";
 import { ReferralSection } from "./waitlist/ReferralSection";
-import { AuthenticationHandler } from "./waitlist/AuthenticationHandler";
 
 interface WaitlistSuccessProps {
   userId: string;
@@ -13,7 +11,6 @@ interface WaitlistSuccessProps {
 export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
   const [referralLink] = useState(`${window.location.origin}/?ref=${userId}`);
   const [referralCount, setReferralCount] = useState(0);
-  const [hasShared, setHasShared] = useState(false);
 
   useEffect(() => {
     const fetchReferralCount = async () => {
@@ -49,11 +46,8 @@ export const WaitlistSuccess = ({ userId }: WaitlistSuccessProps) => {
           <div className="space-y-4">
             <ReferralSection 
               referralLink={referralLink}
-              onShare={() => setHasShared(true)}
+              onShare={() => {}}
             />
-            <div className="flex flex-col gap-4 items-center">
-              <AuthenticationHandler hasShared={hasShared} />
-            </div>
           </div>
         )}
 

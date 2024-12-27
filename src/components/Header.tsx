@@ -1,9 +1,14 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthButton } from "./AuthButton";
 import { Button } from "./ui/button";
+import { Dialog, DialogContent } from "./ui/dialog";
+import { Leaderboard } from "./Leaderboard";
+import { Trophy } from "lucide-react";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   const scrollToFeatures = () => {
     const featuresSection = document.getElementById('features');
@@ -33,9 +38,23 @@ const Header = () => {
           >
             Features
           </Button>
+          <Button
+            onClick={() => setShowLeaderboard(true)}
+            variant="ghost"
+            className="text-white hover:text-[#e57c73] flex items-center gap-2"
+          >
+            <Trophy className="w-4 h-4" />
+            Leaderboard
+          </Button>
           <AuthButton />
         </div>
       </div>
+
+      <Dialog open={showLeaderboard} onOpenChange={setShowLeaderboard}>
+        <DialogContent className="bg-black border-brand text-white max-w-2xl">
+          <Leaderboard />
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };

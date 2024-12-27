@@ -46,34 +46,14 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       // Generate consistent password
       const password = generateConsistentPassword(email, firstName, lastName);
 
-      // Check if user exists in Auth
-      const { data: { users } } = await supabase.auth.admin.listUsers({
-        filters: {
-          email: email
-        }
+      // Try to sign in
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      const userExists = users && users.length > 0;
-
-      if (userExists) {
-        // User exists, try to sign in
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (signInError) {
-          console.error("Sign in error:", signInError);
-          toast({
-            variant: "destructive",
-            title: "Login Failed",
-            description: "Invalid credentials. Please try again.",
-            className: "bg-black text-white border border-[#9b87f5]/20",
-          });
-          return;
-        }
-      } else {
-        // User doesn't exist, try to sign up
+      if (signInError) {
+        // If sign in fails, try to sign up
         const { error: signUpError } = await supabase.auth.signUp({
           email,
           password,
@@ -116,7 +96,8 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         onSuccess();
       }
       
-      navigate('/dashboard');
+      // Instead of navigating to dashboard, stay on the current page
+      window.location.reload();
     } catch (error) {
       console.error("Login error:", error);
       toast({
