@@ -14,6 +14,11 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const generateConsistentPassword = (email: string, firstName: string, lastName: string) => {
+    // Create a consistent password based on user data
+    return btoa(`${email}:${firstName}:${lastName}`).slice(0, 32);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -39,35 +44,42 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         return;
       }
 
-      // Generate a secure password for the user (32 characters)
-      const array = new Uint8Array(24);
-      crypto.getRandomValues(array);
-      const password = Array.from(array)
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
+      // Generate a consistent password for this user
+      const password = generateConsistentPassword(email, firstName, lastName);
 
-      // Try to sign up the user with Supabase Auth
-      const { error: signUpError } = await supabase.auth.signUp({
+      // Try to sign in first
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          data: {
-            waitlist_id: waitlistUser.id,
-            first_name: firstName,
-            last_name: lastName
-          }
-        }
       });
 
-      if (signUpError) {
-        // If user exists, try signing in
-        const { error: signInError } = await supabase.auth.signInWithPassword({
+      if (signInError) {
+        console.log("Sign in failed, attempting sign up");
+        // Only attempt sign up if sign in fails
+        const { error: signUpError } = await supabase.auth.signUp({
           email,
-          password
+          password,
+          options: {
+            data: {
+              waitlist_id: waitlistUser.id,
+              first_name: firstName,
+              last_name: lastName
+            }
+          }
         });
 
-        if (signInError) {
-          throw signInError;
+        if (signUpError) {
+          // Handle rate limit error specifically
+          if (signUpError.status === 429) {
+            toast({
+              variant: "destructive",
+              title: "Too Many Attempts",
+              description: "Please wait a moment before trying again.",
+              className: "bg-black text-white border border-[#9b87f5]/20",
+            });
+            return;
+          }
+          throw signUpError;
         }
       }
 
