@@ -15,7 +15,6 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { toast } = useToast();
 
   const generateConsistentPassword = (email: string, firstName: string, lastName: string) => {
-    // Create a consistent password based on user data
     return btoa(`${email}:${firstName}:${lastName}`).slice(0, 32);
   };
 
@@ -44,18 +43,37 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         return;
       }
 
-      // Generate a consistent password for this user
+      // Generate consistent password
       const password = generateConsistentPassword(email, firstName, lastName);
 
-      // Try to sign in first
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      // Check if user exists in Auth
+      const { data: { users } } = await supabase.auth.admin.listUsers({
+        filters: {
+          email: email
+        }
       });
 
-      if (signInError) {
-        console.log("Sign in failed, attempting sign up");
-        // Only attempt sign up if sign in fails
+      const userExists = users && users.length > 0;
+
+      if (userExists) {
+        // User exists, try to sign in
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (signInError) {
+          console.error("Sign in error:", signInError);
+          toast({
+            variant: "destructive",
+            title: "Login Failed",
+            description: "Invalid credentials. Please try again.",
+            className: "bg-black text-white border border-[#9b87f5]/20",
+          });
+          return;
+        }
+      } else {
+        // User doesn't exist, try to sign up
         const { error: signUpError } = await supabase.auth.signUp({
           email,
           password,
@@ -69,7 +87,6 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         });
 
         if (signUpError) {
-          // Handle rate limit error specifically
           if (signUpError.status === 429) {
             toast({
               variant: "destructive",
@@ -99,7 +116,6 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         onSuccess();
       }
       
-      // Navigate to dashboard
       navigate('/dashboard');
     } catch (error) {
       console.error("Login error:", error);
