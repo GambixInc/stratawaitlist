@@ -19,12 +19,10 @@ export const WaitlistForm = () => {
 
   useEffect(() => {
     const checkExistingUser = async () => {
-      // Check if we have stored waitlist info
       const storedEmail = localStorage.getItem('waitlist_email');
       const storedId = localStorage.getItem('waitlist_id');
       
       if (storedEmail && storedId) {
-        // Verify the user exists in the waitlist
         const { data: existingUser } = await supabase
           .from("waitlist")
           .select("id")
@@ -47,40 +45,7 @@ export const WaitlistForm = () => {
     setIsSubmitting(true);
 
     try {
-      // First, check if the referral code is valid and get referrer's info
-      let referredBy = null;
-      if (referralCode) {
-        const { data: referrer } = await supabase
-          .from("waitlist")
-          .select("id, referral_count, points")
-          .eq("referral_link", referralCode)
-          .maybeSingle();
-
-        if (referrer) {
-          referredBy = referralCode;
-          
-          // Update referrer's stats
-          const { error: updateError } = await supabase
-            .from("waitlist")
-            .update({ 
-              referral_count: (referrer.referral_count || 0) + 1,
-              points: (referrer.points || 0) + 10,
-              last_referral_at: new Date().toISOString()
-            })
-            .eq("id", referrer.id);
-
-          if (updateError) {
-            console.error("Error updating referrer:", updateError);
-            toast({
-              variant: "destructive",
-              title: "Error",
-              description: "Failed to update referrer stats.",
-            });
-          }
-        }
-      }
-
-      // Check if email already exists
+      // First, check if email already exists
       const { data: existingUser } = await supabase
         .from("waitlist")
         .select("id")
@@ -95,6 +60,50 @@ export const WaitlistForm = () => {
         });
         setSubmittedUserId(existingUser.id);
         return;
+      }
+
+      // Check if the referral code is valid and get referrer's info
+      let referredBy = null;
+      if (referralCode) {
+        const { data: referrer } = await supabase
+          .from("waitlist")
+          .select("id, referral_count, points")
+          .eq("id", referralCode)
+          .maybeSingle();
+
+        if (referrer) {
+          referredBy = referralCode;
+          console.log("Found referrer:", referrer);
+          
+          // Update referrer's stats with the new count and points
+          const newReferralCount = (referrer.referral_count || 0) + 1;
+          const newPoints = (referrer.points || 0) + 10;
+          
+          const { error: updateError } = await supabase
+            .from("waitlist")
+            .update({ 
+              referral_count: newReferralCount,
+              points: newPoints,
+              last_referral_at: new Date().toISOString()
+            })
+            .eq("id", referrer.id);
+
+          if (updateError) {
+            console.error("Error updating referrer stats:", updateError);
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: "Failed to update referrer stats.",
+            });
+          } else {
+            console.log("Successfully updated referrer stats:", {
+              newReferralCount,
+              newPoints
+            });
+          }
+        } else {
+          console.log("No referrer found for code:", referralCode);
+        }
       }
 
       // Insert new waitlist entry
@@ -114,6 +123,8 @@ export const WaitlistForm = () => {
         .single();
 
       if (error) throw error;
+
+      console.log("Successfully created new waitlist entry:", data);
 
       confetti({
         particleCount: 100,
