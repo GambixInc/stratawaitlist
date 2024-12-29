@@ -99,9 +99,6 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       if (onSuccess) {
         onSuccess();
       }
-      
-      // Instead of navigating to dashboard, stay on the current page
-      window.location.reload();
     } catch (error) {
       console.error("Login error:", error);
       toast({

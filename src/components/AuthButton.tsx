@@ -67,6 +67,7 @@ export const AuthButton = () => {
       console.log("Initiating logout");
       await supabase.auth.signOut();
       setIsAuthenticated(false);
+      window.location.reload(); // Refresh the page after logout
     } catch (error) {
       console.error('Error logging out:', error);
       toast({
@@ -96,6 +97,7 @@ export const AuthButton = () => {
             <LoginForm onSuccess={() => {
               setShowLoginForm(false);
               setIsAuthenticated(true);
+              window.location.reload(); // Refresh the page after successful login
             }} />
           </div>
         </DialogContent>
