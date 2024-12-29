@@ -17,6 +17,7 @@ export const AuthButton = () => {
     const checkSession = async () => {
       console.log("Checking initial session");
       const { data: { session } } = await supabase.auth.getSession();
+      console.log("Initial session check:", !!session);
       setIsAuthenticated(!!session);
       
       // If we're on the dashboard and not authenticated, redirect to home
