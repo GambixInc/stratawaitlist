@@ -65,14 +65,15 @@ export const WaitlistForm = () => {
       // Check if the referral code is valid and get referrer's info
       let referredBy = null;
       if (referralCode) {
+        console.log("Checking referral code:", referralCode);
         const { data: referrer } = await supabase
           .from("waitlist")
-          .select("id, referral_count, points")
-          .eq("id", referralCode)
+          .select("id, referral_count, points, referral_link")
+          .eq("referral_link", referralCode)
           .maybeSingle();
 
         if (referrer) {
-          referredBy = referralCode;
+          referredBy = referrer.id; // Use the referrer's ID, not the referral_link
           console.log("Found referrer:", referrer);
           
           // Update referrer's stats with the new count and points
