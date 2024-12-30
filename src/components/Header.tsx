@@ -2,14 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthButton } from "./AuthButton";
 import { Button } from "./ui/button";
-import { Dialog, DialogContent } from "./ui/dialog";
-import { Leaderboard } from "./Leaderboard";
-import { Trophy, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useIsMobile();
 
@@ -64,14 +61,6 @@ const Header = () => {
               >
                 Features
               </Button>
-              <Button
-                onClick={() => setShowLeaderboard(true)}
-                variant="ghost"
-                className="text-white hover:text-[#e57c73] flex items-center gap-2"
-              >
-                <Trophy className="w-4 h-4" />
-                Leaderboard
-              </Button>
               <AuthButton />
             </div>
           )}
@@ -87,29 +76,12 @@ const Header = () => {
             >
               Features
             </Button>
-            <Button
-              onClick={() => {
-                setShowLeaderboard(true);
-                setIsMenuOpen(false);
-              }}
-              variant="ghost"
-              className="text-white hover:text-[#e57c73] w-full justify-start flex items-center gap-2"
-            >
-              <Trophy className="w-4 h-4" />
-              Leaderboard
-            </Button>
             <div className="w-full">
               <AuthButton />
             </div>
           </div>
         )}
       </div>
-
-      <Dialog open={showLeaderboard} onOpenChange={setShowLeaderboard}>
-        <DialogContent className="bg-black border-brand text-white max-w-2xl">
-          <Leaderboard />
-        </DialogContent>
-      </Dialog>
     </header>
   );
 };
