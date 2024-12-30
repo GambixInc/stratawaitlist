@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthButton } from "./AuthButton";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -61,7 +60,6 @@ const Header = () => {
               >
                 Features
               </Button>
-              <AuthButton />
             </div>
           )}
         </div>
@@ -76,9 +74,6 @@ const Header = () => {
             >
               Features
             </Button>
-            <div className="w-full">
-              <AuthButton />
-            </div>
           </div>
         )}
       </div>
