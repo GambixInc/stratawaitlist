@@ -25,7 +25,7 @@ const Header = () => {
             onClick={() => navigate("/")}
             className="text-2xl font-bold text-brand hover:text-brand/90 transition-colors"
           >
-            Gambix
+            Strata
           </button>
 
           {isMobile ? (
