@@ -5,58 +5,46 @@ import { Menu, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useIsMobile();
 
   const scrollToFeatures = () => {
-    const featuresSection = document.getElementById('features');
+    const featuresSection = document.getElementById("features");
     if (featuresSection) {
-      featuresSection.scrollIntoView({ behavior: 'smooth' });
+      featuresSection.scrollIntoView({ behavior: "smooth" });
     }
-    setIsMenuOpen(false);
-  };
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsOpen(false);
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-lg z-50">
-      <div className="container mx-auto py-4 px-4">
-        <div className="flex justify-between items-center">
-          <button 
-            onClick={() => navigate('/')}
-            className="hover:opacity-80 transition-opacity"
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <button
+            onClick={() => navigate("/")}
+            className="text-2xl font-bold text-brand hover:text-brand/90 transition-colors"
           >
-            <img 
-              src="/lovable-uploads/0e88fe57-f24d-470f-bd94-1e8a284f5c77.png" 
-              alt="Gambix" 
-              className="h-8 md:h-12" 
-            />
+            Gambix
           </button>
 
-          {/* Mobile Menu Button */}
-          {isMobile && (
+          {isMobile ? (
             <button
-              onClick={toggleMenu}
-              className="text-white p-2"
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
             >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
+              {isOpen ? (
+                <X className="h-6 w-6 text-white" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-6 w-6 text-white" />
               )}
             </button>
-          )}
-
-          {/* Desktop Navigation */}
-          {!isMobile && (
-            <div className="flex items-center gap-4">
+          ) : (
+            <div className="flex items-center space-x-4">
               <Button
-                onClick={scrollToFeatures}
                 variant="ghost"
-                className="text-white hover:text-[#e57c73]"
+                className="text-white hover:text-white hover:bg-white/10"
+                onClick={scrollToFeatures}
               >
                 Features
               </Button>
@@ -64,13 +52,12 @@ const Header = () => {
           )}
         </div>
 
-        {/* Mobile Navigation Menu */}
-        {isMobile && isMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-black/90 backdrop-blur-lg py-4 px-4 flex flex-col gap-4 animate-fade-in">
+        {isMobile && isOpen && (
+          <div className="py-4 space-y-4">
             <Button
-              onClick={scrollToFeatures}
               variant="ghost"
-              className="text-white hover:text-[#e57c73] w-full justify-start"
+              className="w-full text-white hover:text-white hover:bg-white/10 justify-start"
+              onClick={scrollToFeatures}
             >
               Features
             </Button>
