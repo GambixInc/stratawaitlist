@@ -125,8 +125,6 @@ export const WaitlistForm = () => {
 
       if (error) throw error;
 
-      console.log("Successfully created new waitlist entry:", data);
-
       confetti({
         particleCount: 100,
         spread: 70,
@@ -136,8 +134,8 @@ export const WaitlistForm = () => {
       setSubmittedUserId(data.id);
       
       toast({
-        title: "Welcome to the waitlist!",
-        description: "Thank you for joining. Share with friends to climb the leaderboard!",
+        title: "Share with friends",
+        className: "bg-black text-white border border-[#9b87f5]/20",
       });
 
       // Store waitlist info
