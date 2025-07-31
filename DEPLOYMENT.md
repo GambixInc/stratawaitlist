@@ -64,12 +64,11 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 
    ```bash
    # Create application directory
-   sudo mkdir -p /var/www/stratawaitlist
-   sudo chown -R ec2-user:ec2-user /var/www/stratawaitlist
+   mkdir -p ~/stratawaitlist
 
    # Copy files
-   cp -r . /var/www/stratawaitlist/
-   cd /var/www/stratawaitlist
+   cp -r . ~/stratawaitlist/
+   cd ~/stratawaitlist
 
    # Install frontend dependencies and build
    npm install
@@ -95,13 +94,13 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
    ```bash
    # Create Apache configuration
    sudo tee /etc/httpd/conf.d/stratawaitlist.conf > /dev/null << 'EOF'
-   DocumentRoot "/var/www/stratawaitlist/dist"
+   DocumentRoot "/home/ec2-user/stratawaitlist/dist"
 
    ProxyPreserveHost On
    ProxyPass /api http://localhost:3001/api
    ProxyPassReverse /api http://localhost:3001/api
 
-   <Directory "/var/www/stratawaitlist/dist">
+   <Directory "/home/ec2-user/stratawaitlist/dist">
        Options Indexes FollowSymLinks
        AllowOverride All
        Require all granted
@@ -120,8 +119,8 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
    EOF
 
    # Set permissions and restart
-   sudo chown -R apache:apache /var/www/stratawaitlist/dist
-   sudo chmod -R 755 /var/www/stratawaitlist/dist
+   sudo chown -R apache:apache /home/ec2-user/stratawaitlist/dist
+   sudo chmod -R 755 /home/ec2-user/stratawaitlist/dist
    sudo systemctl restart httpd
    ```
 
@@ -140,7 +139,7 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 After deployment, your application will be structured as follows:
 
 ```
-/var/www/stratawaitlist/
+~/stratawaitlist/
 ├── dist/                    # Built React application
 ├── server/                  # Express.js server
 │   ├── server.js           # Main server file
@@ -165,7 +164,7 @@ NODE_ENV=production
 PORT=3001
 
 # Database configuration (SQLite file path)
-DB_PATH=/var/www/stratawaitlist/server/waitlist.db
+DB_PATH=~/stratawaitlist/server/waitlist.db
 ```
 
 ### Frontend Configuration
@@ -246,14 +245,14 @@ sqlite3 /var/www/stratawaitlist/server/waitlist.db
 3. **Database issues:**
 
    ```bash
-   cd /var/www/stratawaitlist/server
+   cd ~/stratawaitlist/server
    npm run init-db
    ```
 
 4. **Permission issues:**
    ```bash
-   sudo chown -R apache:apache /var/www/stratawaitlist/dist
-   sudo chmod -R 755 /var/www/stratawaitlist/dist
+   sudo chown -R apache:apache /home/ec2-user/stratawaitlist/dist
+   sudo chmod -R 755 /home/ec2-user/stratawaitlist/dist
    ```
 
 ### Performance Monitoring
@@ -287,7 +286,7 @@ To update the application:
 1. **Pull new code:**
 
    ```bash
-   cd /var/www/stratawaitlist
+   cd ~/stratawaitlist
    git pull origin main
    ```
 

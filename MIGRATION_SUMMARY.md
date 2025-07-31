@@ -197,7 +197,7 @@ VITE_API_URL=http://your-domain.com/api
 # Backend (server/.env)
 NODE_ENV=production
 PORT=3001
-DB_PATH=/var/www/stratawaitlist/server/waitlist.db
+DB_PATH=~/stratawaitlist/server/waitlist.db
 ```
 
 ## 📊 Monitoring

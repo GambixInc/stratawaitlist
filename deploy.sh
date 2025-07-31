@@ -31,13 +31,12 @@ sudo npm install -g pm2
 
 # Create application directory
 echo "📁 Setting up application directory..."
-sudo mkdir -p /var/www/stratawaitlist
-sudo chown -R ec2-user:ec2-user /var/www/stratawaitlist
+mkdir -p ~/stratawaitlist
 
 # Copy application files (assuming they're in the current directory)
 echo "📋 Copying application files..."
-cp -r . /var/www/stratawaitlist/
-cd /var/www/stratawaitlist
+cp -r . ~/stratawaitlist/
+cd ~/stratawaitlist
 
 # Install frontend dependencies
 echo "📦 Installing frontend dependencies..."
@@ -62,7 +61,7 @@ cat > ecosystem.config.js << 'EOF'
 export default {
   apps: [{
     name: 'stratawaitlist-server',
-    cwd: '/var/www/stratawaitlist/server',
+cwd: '~/stratawaitlist/server',
     script: 'server.js',
     instances: 1,
     autorestart: true,
@@ -86,7 +85,7 @@ pm2 startup
 echo "⚙️ Configuring Apache..."
 sudo tee /etc/httpd/conf.d/stratawaitlist.conf > /dev/null << 'EOF'
 # Serve the React app
-DocumentRoot "/var/www/stratawaitlist/dist"
+DocumentRoot "/home/ec2-user/stratawaitlist/dist"
 
 # Proxy API requests to the Node.js server
 ProxyPreserveHost On
@@ -94,7 +93,7 @@ ProxyPass /api http://localhost:3001/api
 ProxyPassReverse /api http://localhost:3001/api
 
 # Handle React Router
-<Directory "/var/www/stratawaitlist/dist">
+<Directory "/home/ec2-user/stratawaitlist/dist">
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
@@ -116,8 +115,8 @@ EOF
 
 # Set proper permissions
 echo "🔐 Setting permissions..."
-sudo chown -R apache:apache /var/www/stratawaitlist/dist
-sudo chmod -R 755 /var/www/stratawaitlist/dist
+sudo chown -R apache:apache /home/ec2-user/stratawaitlist/dist
+sudo chmod -R 755 /home/ec2-user/stratawaitlist/dist
 
 # Restart Apache
 echo "🔄 Restarting Apache..."

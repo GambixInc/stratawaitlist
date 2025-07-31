@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "stratawaitlist-server",
-      cwd: "./server",
+      cwd: "~/stratawaitlist/server",
       script: "server.js",
       instances: 1,
       autorestart: true,
