@@ -84,26 +84,7 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 3. **Configure PM2:**
 
    ```bash
-   # Create PM2 ecosystem file
-   cat > ecosystem.config.js << 'EOF'
-   module.exports = {
-     apps: [{
-       name: 'stratawaitlist-server',
-   cwd: '/var/www/stratawaitlist/server',
-       script: 'server.js',
-       instances: 1,
-       autorestart: true,
-       watch: false,
-       max_memory_restart: '1G',
-       env: {
-         NODE_ENV: 'production',
-         PORT: 3001
-       }
-     }]
-   };
-   EOF
-
-   # Start server
+   # Start server with PM2
    pm2 start ecosystem.config.js
    pm2 save
    pm2 startup

@@ -59,10 +59,10 @@ npm run init-db
 # Create PM2 ecosystem file
 echo "⚙️ Creating PM2 configuration..."
 cat > ecosystem.config.js << 'EOF'
-module.exports = {
+export default {
   apps: [{
     name: 'stratawaitlist-server',
-cwd: '/var/www/stratawaitlist/server',
+    cwd: '/var/www/stratawaitlist/server',
     script: 'server.js',
     instances: 1,
     autorestart: true,
