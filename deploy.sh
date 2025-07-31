@@ -31,13 +31,13 @@ sudo npm install -g pm2
 
 # Create application directory
 echo "📁 Setting up application directory..."
-sudo mkdir -p /var/www/strata-waitlist
-sudo chown -R ec2-user:ec2-user /var/www/strata-waitlist
+sudo mkdir -p /var/www/stratawaitlist
+sudo chown -R ec2-user:ec2-user /var/www/stratawaitlist
 
 # Copy application files (assuming they're in the current directory)
 echo "📋 Copying application files..."
-cp -r . /var/www/strata-waitlist/
-cd /var/www/strata-waitlist
+cp -r . /var/www/stratawaitlist/
+cd /var/www/stratawaitlist
 
 # Install frontend dependencies
 echo "📦 Installing frontend dependencies..."
@@ -61,8 +61,8 @@ echo "⚙️ Creating PM2 configuration..."
 cat > ecosystem.config.js << 'EOF'
 module.exports = {
   apps: [{
-    name: 'strata-waitlist-server',
-    cwd: '/var/www/strata-waitlist/server',
+    name: 'stratawaitlist-server',
+cwd: '/var/www/stratawaitlist/server',
     script: 'server.js',
     instances: 1,
     autorestart: true,
@@ -84,9 +84,9 @@ pm2 startup
 
 # Configure Apache to serve the frontend and proxy API requests
 echo "⚙️ Configuring Apache..."
-sudo tee /etc/httpd/conf.d/strata-waitlist.conf > /dev/null << 'EOF'
+sudo tee /etc/httpd/conf.d/stratawaitlist.conf > /dev/null << 'EOF'
 # Serve the React app
-DocumentRoot "/var/www/strata-waitlist/dist"
+DocumentRoot "/var/www/stratawaitlist/dist"
 
 # Proxy API requests to the Node.js server
 ProxyPreserveHost On
@@ -94,7 +94,7 @@ ProxyPass /api http://localhost:3001/api
 ProxyPassReverse /api http://localhost:3001/api
 
 # Handle React Router
-<Directory "/var/www/strata-waitlist/dist">
+<Directory "/var/www/stratawaitlist/dist">
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
@@ -116,8 +116,8 @@ EOF
 
 # Set proper permissions
 echo "🔐 Setting permissions..."
-sudo chown -R apache:apache /var/www/strata-waitlist/dist
-sudo chmod -R 755 /var/www/strata-waitlist/dist
+sudo chown -R apache:apache /var/www/stratawaitlist/dist
+sudo chmod -R 755 /var/www/stratawaitlist/dist
 
 # Restart Apache
 echo "🔄 Restarting Apache..."
@@ -137,7 +137,7 @@ echo "🌐 Application should be available at: http://$(curl -s http://169.254.1
 echo "📊 API is available at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)/api"
 echo ""
 echo "📋 Useful commands:"
-echo "  - View server logs: pm2 logs strata-waitlist-server"
-echo "  - Restart server: pm2 restart strata-waitlist-server"
+echo "  - View server logs: pm2 logs stratawaitlist-server"
+echo "  - Restart server: pm2 restart stratawaitlist-server"
 echo "  - View Apache logs: sudo tail -f /var/log/httpd/error_log"
 echo "  - Check server status: pm2 status" 

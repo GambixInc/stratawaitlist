@@ -1,5 +1,5 @@
 {
-  "name": "strata-waitlist-server",
+  "name": "stratawaitlist-server",
   "version": "1.0.0",
   "description": "Backend server for Strata waitlist application",
   "main": "server.js",

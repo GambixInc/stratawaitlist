@@ -23,7 +23,7 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 1. **Upload files to EC2 instance:**
 
    ```bash
-   scp -r . ec2-user@your-ec2-ip:/home/ec2-user/strata-waitlist
+   scp -r . ec2-user@your-ec2-ip:/home/ec2-user/stratawaitlist
    ```
 
 2. **SSH into your EC2 instance:**
@@ -34,7 +34,7 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 
 3. **Run the deployment script:**
    ```bash
-   cd /home/ec2-user/strata-waitlist
+   cd /home/ec2-user/stratawaitlist
    chmod +x deploy.sh
    ./deploy.sh
    ```
@@ -64,12 +64,12 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 
    ```bash
    # Create application directory
-   sudo mkdir -p /var/www/strata-waitlist
-   sudo chown -R ec2-user:ec2-user /var/www/strata-waitlist
+   sudo mkdir -p /var/www/stratawaitlist
+   sudo chown -R ec2-user:ec2-user /var/www/stratawaitlist
 
    # Copy files
-   cp -r . /var/www/strata-waitlist/
-   cd /var/www/strata-waitlist
+   cp -r . /var/www/stratawaitlist/
+   cd /var/www/stratawaitlist
 
    # Install frontend dependencies and build
    npm install
@@ -88,8 +88,8 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
    cat > ecosystem.config.js << 'EOF'
    module.exports = {
      apps: [{
-       name: 'strata-waitlist-server',
-       cwd: '/var/www/strata-waitlist/server',
+       name: 'stratawaitlist-server',
+   cwd: '/var/www/stratawaitlist/server',
        script: 'server.js',
        instances: 1,
        autorestart: true,
@@ -113,14 +113,14 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 
    ```bash
    # Create Apache configuration
-   sudo tee /etc/httpd/conf.d/strata-waitlist.conf > /dev/null << 'EOF'
-   DocumentRoot "/var/www/strata-waitlist/dist"
+   sudo tee /etc/httpd/conf.d/stratawaitlist.conf > /dev/null << 'EOF'
+   DocumentRoot "/var/www/stratawaitlist/dist"
 
    ProxyPreserveHost On
    ProxyPass /api http://localhost:3001/api
    ProxyPassReverse /api http://localhost:3001/api
 
-   <Directory "/var/www/strata-waitlist/dist">
+   <Directory "/var/www/stratawaitlist/dist">
        Options Indexes FollowSymLinks
        AllowOverride All
        Require all granted
@@ -139,8 +139,8 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
    EOF
 
    # Set permissions and restart
-   sudo chown -R apache:apache /var/www/strata-waitlist/dist
-   sudo chmod -R 755 /var/www/strata-waitlist/dist
+   sudo chown -R apache:apache /var/www/stratawaitlist/dist
+   sudo chmod -R 755 /var/www/stratawaitlist/dist
    sudo systemctl restart httpd
    ```
 
@@ -159,7 +159,7 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 After deployment, your application will be structured as follows:
 
 ```
-/var/www/strata-waitlist/
+/var/www/stratawaitlist/
 ├── dist/                    # Built React application
 ├── server/                  # Express.js server
 │   ├── server.js           # Main server file
@@ -184,7 +184,7 @@ NODE_ENV=production
 PORT=3001
 
 # Database configuration (SQLite file path)
-DB_PATH=/var/www/strata-waitlist/server/waitlist.db
+DB_PATH=/var/www/stratawaitlist/server/waitlist.db
 ```
 
 ### Frontend Configuration
@@ -202,7 +202,7 @@ VITE_API_URL=http://your-domain.com/api
 
 ```bash
 # Server logs
-pm2 logs strata-waitlist-server
+pm2 logs stratawaitlist-server
 
 # Apache logs
 sudo tail -f /var/log/httpd/error_log
@@ -216,7 +216,7 @@ pm2 status
 
 ```bash
 # Restart server
-pm2 restart strata-waitlist-server
+pm2 restart stratawaitlist-server
 
 # Restart Apache
 sudo systemctl restart httpd
@@ -229,10 +229,10 @@ pm2 restart all
 
 ```bash
 # Backup database
-cp /var/www/strata-waitlist/server/waitlist.db /backup/waitlist-$(date +%Y%m%d).db
+cp /var/www/stratawaitlist/server/waitlist.db /backup/waitlist-$(date +%Y%m%d).db
 
 # View database (requires sqlite3)
-sqlite3 /var/www/strata-waitlist/server/waitlist.db
+sqlite3 /var/www/stratawaitlist/server/waitlist.db
 ```
 
 ## 🔒 Security Considerations
@@ -250,8 +250,8 @@ sqlite3 /var/www/strata-waitlist/server/waitlist.db
 1. **Server not starting:**
 
    ```bash
-   pm2 logs strata-waitlist-server
-   cd /var/www/strata-waitlist/server
+   pm2 logs stratawaitlist-server
+   cd /var/www/stratawaitlist/server
    node server.js
    ```
 
@@ -265,14 +265,14 @@ sqlite3 /var/www/strata-waitlist/server/waitlist.db
 3. **Database issues:**
 
    ```bash
-   cd /var/www/strata-waitlist/server
+   cd /var/www/stratawaitlist/server
    npm run init-db
    ```
 
 4. **Permission issues:**
    ```bash
-   sudo chown -R apache:apache /var/www/strata-waitlist/dist
-   sudo chmod -R 755 /var/www/strata-waitlist/dist
+   sudo chown -R apache:apache /var/www/stratawaitlist/dist
+   sudo chmod -R 755 /var/www/stratawaitlist/dist
    ```
 
 ### Performance Monitoring
@@ -306,7 +306,7 @@ To update the application:
 1. **Pull new code:**
 
    ```bash
-   cd /var/www/strata-waitlist
+   cd /var/www/stratawaitlist
    git pull origin main
    ```
 
@@ -322,7 +322,7 @@ To update the application:
    ```bash
    cd server
    npm install
-   pm2 restart strata-waitlist-server
+   pm2 restart stratawaitlist-server
    ```
 
 4. **Update Apache configuration if needed:**

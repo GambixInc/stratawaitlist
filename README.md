@@ -229,9 +229,9 @@ CREATE TABLE user_achievements (
    # Copy frontend build to Apache
    sudo cp -r dist/* /var/www/html/
    
-   # Copy backend to /opt/strata-waitlist/
-   sudo mkdir -p /opt/strata-waitlist
-   sudo cp -r server/* /opt/strata-waitlist/
+   # Copy backend to /opt/stratawaitlist/
+sudo mkdir -p /opt/stratawaitlist
+sudo cp -r server/* /opt/stratawaitlist/
    ```
 
 3. **Configure Apache proxy**
@@ -243,10 +243,10 @@ CREATE TABLE user_achievements (
 
 4. **Start the backend**
    ```bash
-   cd /opt/strata-waitlist
-   npm install
-   npm run init-db
-   pm2 start server.js --name "strata-waitlist"
+   cd /opt/stratawaitlist
+npm install
+npm run init-db
+pm2 start server.js --name "stratawaitlist"
    pm2 save
    pm2 startup
    ```
@@ -282,7 +282,7 @@ The SQLite database is automatically created in the `server/` directory as `wait
 
 4. **Deployment Issues**
    - Check Apache error logs: `sudo tail -f /var/log/apache2/error.log`
-   - Check PM2 logs: `pm2 logs strata-waitlist`
+   - Check PM2 logs: `pm2 logs stratawaitlist`
    - Verify firewall settings
 
 ### Development Tips
