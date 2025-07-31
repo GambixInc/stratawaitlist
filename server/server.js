@@ -151,6 +151,22 @@ app.get("/api/waitlist/:id", async (req, res) => {
   }
 });
 
+// Add this after the POST /api/waitlist endpoint in server.js
+app.get("/api/waitlist", async (req, res) => {
+  try {
+    // Just return a status message since we don't need all entries
+    res.json({
+      message: "Waitlist endpoint available",
+      status: "ok",
+    });
+  } catch (error) {
+    console.error("Error getting waitlist:", error);
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+});
+
 // Get leaderboard
 app.get("/api/leaderboard", async (req, res) => {
   try {
