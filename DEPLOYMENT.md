@@ -10,6 +10,14 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 - **Process Manager**: PM2 for Node.js server management
 - **Web Server**: Apache with proxy configuration
 
+### Permission Strategy
+
+This deployment uses a permission strategy that allows both Apache to serve files and the ec2-user to update the application:
+
+- `ec2-user` owns all application files (can run npm commands, git pull, etc.)
+- Apache is added to the `ec2-user` group for read access
+- This enables seamless updates without permission issues
+
 ## 📋 Prerequisites
 
 - EC2 instance with Amazon Linux 2 or similar
@@ -118,9 +126,11 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
    LoadModule rewrite_module modules/mod_rewrite.so
    EOF
 
-   # Set permissions and restart
-   sudo chown -R apache:apache /home/ec2-user/stratawaitlist/dist
+   # Set permissions - give apache read access but keep ec2-user as owner
+   sudo chown -R ec2-user:ec2-user /home/ec2-user/stratawaitlist/dist
    sudo chmod -R 755 /home/ec2-user/stratawaitlist/dist
+   # Add apache to ec2-user group for read access
+   sudo usermod -a -G ec2-user apache
    sudo systemctl restart httpd
    ```
 
@@ -203,6 +213,29 @@ sudo systemctl restart httpd
 
 # Restart PM2
 pm2 restart all
+```
+
+### Updating the Application
+
+To update your application with new code:
+
+```bash
+# 1. Pull latest changes
+cd ~/stratawaitlist
+git pull origin main
+
+# 2. Install/update dependencies
+npm install
+cd server && npm install && cd ..
+
+# 3. Build the frontend
+npm run build
+
+# 4. Restart the server
+pm2 restart stratawaitlist-server
+
+# 5. Apache will automatically serve the new dist files
+# since ec2-user owns the files and apache has read access
 ```
 
 ### Database Management
