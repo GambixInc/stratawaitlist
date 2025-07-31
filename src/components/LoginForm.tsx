@@ -27,7 +27,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           variant: "destructive",
           title: "Access Denied",
           description: "Please join our waitlist first to gain access.",
-          className: "bg-black text-white border border-[#9b87f5]/20",
+          className: "bg-red-900/90 text-red-50 border-red-500/50 backdrop-blur-sm shadow-lg",
         });
         navigate('/');
         return;
@@ -39,7 +39,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           variant: "destructive",
           title: "Invalid Information",
           description: "The provided information doesn't match our records.",
-          className: "bg-black text-white border border-[#9b87f5]/20",
+          className: "bg-red-900/90 text-red-50 border-red-500/50 backdrop-blur-sm shadow-lg",
         });
         return;
       }
@@ -53,7 +53,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       toast({
         title: `Welcome back, ${firstName}!`,
         description: "Successfully logged in.",
-        className: "bg-black text-white border border-[#9b87f5]/20",
+        className: "bg-green-900/90 text-green-50 border-green-500/50 backdrop-blur-sm shadow-lg",
       });
 
       if (onSuccess) {
@@ -65,7 +65,7 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         variant: "destructive",
         title: "Error",
         description: "Something went wrong. Please try again.",
-        className: "bg-black text-white border border-[#9b87f5]/20",
+        className: "bg-red-900/90 text-red-50 border-red-500/50 backdrop-blur-sm shadow-lg",
       });
     } finally {
       setIsLoading(false);

@@ -51,6 +51,7 @@ export const WaitlistForm = () => {
             variant: "destructive",
             title: "Already registered",
             description: "This email is already on the waitlist.",
+            className: "bg-red-900/90 text-red-50 border-red-500/50 backdrop-blur-sm shadow-lg",
           });
           setSubmittedUserId(existingUser.id);
           return;
@@ -77,7 +78,7 @@ export const WaitlistForm = () => {
       
       toast({
         title: "Share with friends",
-        className: "bg-black text-white border border-[#9b87f5]/20",
+        className: "bg-green-900/90 text-green-50 border-green-500/50 backdrop-blur-sm shadow-lg",
       });
 
       // Store waitlist info
@@ -95,6 +96,7 @@ export const WaitlistForm = () => {
         variant: "destructive",
         title: "Error",
         description: "Something went wrong. Please try again.",
+        className: "bg-red-900/90 text-red-50 border-red-500/50 backdrop-blur-sm shadow-lg",
       });
     } finally {
       setIsSubmitting(false);

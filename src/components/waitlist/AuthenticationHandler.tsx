@@ -25,7 +25,7 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
           variant: "destructive",
           title: "Error",
           description: "Could not find your information. Please try joining the waitlist again.",
-          className: "bg-black text-white border border-brand/20",
+          className: "bg-red-900/90 text-red-50 border-red-500/50 backdrop-blur-sm shadow-lg",
         });
         return;
       }
@@ -34,7 +34,7 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
       toast({
         title: "Success!",
         description: "Welcome to your dashboard.",
-        className: "bg-black text-white border border-brand/20",
+        className: "bg-green-900/90 text-green-50 border-green-500/50 backdrop-blur-sm shadow-lg",
       });
       navigate('/dashboard');
     } catch (error) {
@@ -43,7 +43,7 @@ export const AuthenticationHandler = ({ hasShared }: AuthenticationHandlerProps)
         variant: "destructive",
         title: "Error",
         description: "Failed to access dashboard. Please try again.",
-        className: "bg-black text-white border border-brand/20",
+        className: "bg-red-900/90 text-red-50 border-red-500/50 backdrop-blur-sm shadow-lg",
       });
     }
   };

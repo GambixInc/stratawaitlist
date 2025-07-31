@@ -26,7 +26,7 @@ export const AuthButton = () => {
         toast({
           title: "Session expired",
           description: "Please log in again to continue.",
-          className: "bg-black text-white border border-brand/20",
+          className: "bg-yellow-900/90 text-yellow-50 border-yellow-500/50 backdrop-blur-sm shadow-lg",
         });
       }
     };
@@ -54,7 +54,7 @@ export const AuthButton = () => {
       toast({
         title: "Logged out",
         description: "You have been successfully logged out.",
-        className: "bg-black text-white border border-brand/20",
+        className: "bg-green-900/90 text-green-50 border-green-500/50 backdrop-blur-sm shadow-lg",
       });
     } catch (error) {
       console.error('Error logging out:', error);
@@ -62,7 +62,7 @@ export const AuthButton = () => {
         variant: "destructive",
         title: "Error",
         description: "Failed to log out. Please try again.",
-        className: "bg-black text-white border border-brand/20",
+        className: "bg-red-900/90 text-red-50 border-red-500/50 backdrop-blur-sm shadow-lg",
       });
     }
   };
