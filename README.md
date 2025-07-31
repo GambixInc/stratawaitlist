@@ -86,9 +86,8 @@ bun install
 Create a `.env.local` file in the root directory:
 
 ```bash
-# Supabase Configuration
-VITE_SUPABASE_URL=https://xnjcoexivndpcmjapzbl.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhuamNvZXhpdm5kcGNtamFwemJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2MTA2OTMsImV4cCI6MjA0OTE4NjY5M30.g-D8Uw3-EWFGfskFpUXVhfeoAdoziVuHCifHQx9pQ10
+# API Configuration (optional - defaults to localhost:3001)
+VITE_API_URL=http://localhost:3001/api
 ```
 
 ### 4. Start Development Server
@@ -144,38 +143,39 @@ src/
 
 ## 🗄 Database Setup
 
-This project uses Supabase as the backend. The database is already configured, but here's what you need to know:
+This project uses SQLite as the backend database. The database is automatically initialized when you run the server.
 
-### Supabase Configuration
+### Database Configuration
 
-- **Project ID**: `xnjcoexivndpcmjapzbl`
-- **URL**: `https://xnjcoexivndpcmjapzbl.supabase.co`
-- **Configuration**: Located in `supabase/config.toml`
+- **Database Type**: SQLite (file-based)
+- **Database File**: `server/waitlist.db`
+- **Tables**: Automatically created on first run
 
 ### Database Tables
 
-The application uses the following Supabase tables:
-- `profiles` - User profile information
-- `waitlist_entries` - Waitlist signups
-- `referrals` - Referral tracking
+The application uses the following SQLite tables:
+- `waitlist` - Waitlist entries and user information
+- `profiles` - User profile information (if needed)
+- `referral_rewards` - Available referral rewards
+- `user_achievements` - User achievement tracking
 
-### Authentication
+### API Endpoints
 
-Supabase Auth is configured for:
-- Email/password authentication
-- Social login (if configured)
-- Session management
-- Protected routes
+The application includes a REST API with the following endpoints:
+- `POST /api/waitlist` - Create new waitlist entry
+- `GET /api/waitlist/:id` - Get waitlist entry by ID
+- `GET /api/waitlist/email/:email` - Get waitlist entry by email
+- `GET /api/leaderboard` - Get leaderboard data
+- `GET /api/rewards` - Get available rewards
+- `PATCH /api/waitlist/:id` - Update waitlist entry
 
 ## 🚀 Deployment
 
-### Option 1: Deploy with Lovable (Recommended)
+### Option 1: Deploy to EC2 with Apache (Recommended)
 
-1. Visit the [Lovable Project](https://lovable.dev/projects/1bc6f77b-a3ef-492d-8429-a67644ce6d68)
-2. Click on **Share → Publish**
-3. Your changes will be automatically deployed
+See the detailed deployment guide in [DEPLOYMENT.md](./DEPLOYMENT.md) for step-by-step instructions on deploying to an EC2 instance with Apache.
 
-### Option 2: Deploy with Netlify
+### Option 2: Deploy with Netlify (Frontend Only)
 
 1. **Connect to Netlify**:
    - Push your code to GitHub
@@ -186,22 +186,25 @@ Supabase Auth is configured for:
 2. **Environment Variables**:
    Add the following environment variables in Netlify:
    ```
-   VITE_SUPABASE_URL=https://xnjcoexivndpcmjapzbl.supabase.co
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   VITE_API_URL=https://your-api-domain.com/api
    ```
 
 3. **Deploy**:
    - Netlify will automatically deploy on every push to main branch
    - Manual deployments can be triggered from the Netlify dashboard
 
-### Option 3: Manual Build and Deploy
+### Option 3: Local Development
 
 ```bash
-# Build the project
-npm run build
+# Start the backend server
+cd server
+npm install
+npm run init-db
+npm start
 
-# The built files will be in the `dist` directory
-# Upload these files to your hosting provider
+# In another terminal, start the frontend
+npm install
+npm run dev
 ```
 
 ## 📁 Project Structure

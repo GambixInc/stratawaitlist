@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { apiClient } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Trophy, Crown, X } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
@@ -23,38 +23,21 @@ export const Leaderboard = ({ currentUserId }: { currentUserId?: string }) => {
   const [isVisible, setIsVisible] = useState(true);
   const queryClient = useQueryClient();
 
+  // Note: Real-time updates are not implemented in the SQLite version
+  // You can implement polling or WebSocket if needed
   useEffect(() => {
-    const channel = supabase
-      .channel('schema-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'waitlist'
-        },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ['leaderboard'] });
-        }
-      )
-      .subscribe();
+    const interval = setInterval(() => {
+      queryClient.invalidateQueries({ queryKey: ['leaderboard'] });
+    }, 30000); // Refresh every 30 seconds
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => clearInterval(interval);
   }, [queryClient]);
 
   const { data: leaderboard, isLoading } = useQuery({
     queryKey: ["leaderboard"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("waitlist")
-        .select("id, first_name, last_name, referral_count, created_at, tier_level, points")
-        .order("points", { ascending: false })
-        .limit(10);
-
-      if (error) throw error;
-      return (data || []) as LeaderboardEntryType[];
+      const { leaderboard } = await apiClient.getLeaderboard(10);
+      return leaderboard as LeaderboardEntryType[];
     },
   });
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { apiClient } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import confetti from "canvas-confetti";
 import { WaitlistFormInputs } from "./WaitlistFormInputs";
@@ -23,15 +23,13 @@ export const WaitlistForm = () => {
       const storedId = localStorage.getItem('waitlist_id');
       
       if (storedEmail && storedId) {
-        const { data: existingUser } = await supabase
-          .from("waitlist")
-          .select("id")
-          .eq("id", storedId)
-          .eq("email", storedEmail)
-          .maybeSingle();
-
-        if (existingUser) {
-          setSubmittedUserId(existingUser.id);
+        try {
+          const { user: existingUser } = await apiClient.getWaitlistEntryById(storedId);
+          if (existingUser && existingUser.email === storedEmail) {
+            setSubmittedUserId(existingUser.id);
+          }
+        } catch (error) {
+          console.error('Error checking existing user:', error);
         }
       }
       setIsLoading(false);
@@ -46,84 +44,28 @@ export const WaitlistForm = () => {
 
     try {
       // First, check if email already exists
-      const { data: existingUser } = await supabase
-        .from("waitlist")
-        .select("id")
-        .eq("email", email)
-        .maybeSingle();
-
-      if (existingUser) {
-        toast({
-          variant: "destructive",
-          title: "Already registered",
-          description: "This email is already on the waitlist.",
-        });
-        setSubmittedUserId(existingUser.id);
-        return;
-      }
-
-      // Check if the referral code is valid and get referrer's info
-      let referredBy = null;
-      if (referralCode) {
-        console.log("Checking referral code:", referralCode);
-        const { data: referrer } = await supabase
-          .from("waitlist")
-          .select("id, referral_count, points, referral_link")
-          .eq("referral_link", referralCode)
-          .maybeSingle();
-
-        if (referrer) {
-          referredBy = referrer.id; // Use the referrer's ID, not the referral_link
-          console.log("Found referrer:", referrer);
-          
-          // Update referrer's stats with the new count and points
-          const newReferralCount = (referrer.referral_count || 0) + 1;
-          const newPoints = (referrer.points || 0) + 10;
-          
-          const { error: updateError } = await supabase
-            .from("waitlist")
-            .update({ 
-              referral_count: newReferralCount,
-              points: newPoints,
-              last_referral_at: new Date().toISOString()
-            })
-            .eq("id", referrer.id);
-
-          if (updateError) {
-            console.error("Error updating referrer stats:", updateError);
-            toast({
-              variant: "destructive",
-              title: "Error",
-              description: "Failed to update referrer stats.",
-            });
-          } else {
-            console.log("Successfully updated referrer stats:", {
-              newReferralCount,
-              newPoints
-            });
-          }
-        } else {
-          console.log("No referrer found for code:", referralCode);
+      try {
+        const { user: existingUser } = await apiClient.getWaitlistEntryByEmail(email);
+        if (existingUser) {
+          toast({
+            variant: "destructive",
+            title: "Already registered",
+            description: "This email is already on the waitlist.",
+          });
+          setSubmittedUserId(existingUser.id);
+          return;
         }
+      } catch (error) {
+        // User doesn't exist, continue with registration
       }
 
-      // Insert new waitlist entry
-      const { data, error } = await supabase
-        .from("waitlist")
-        .insert([
-          {
-            first_name: firstName,
-            last_name: lastName,
-            email: email,
-            referral_count: 0,
-            points: 0,
-            referred_by: referredBy
-          },
-        ])
-        .select()
-        .single();
-
-      if (error) throw error;
+      // Create new waitlist entry with referral code if provided
+      const { user: data } = await apiClient.createWaitlistEntry({
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        referral_code: referralCode || undefined
+      });
 
       confetti({
         particleCount: 100,
