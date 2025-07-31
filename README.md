@@ -1,286 +1,315 @@
-# Strata Waitlist - Early Access Platform
+# Strata Waitlist
 
-A modern waitlist application built with React, TypeScript, and Supabase, featuring user authentication, referral systems, and a beautiful UI with shadcn/ui components.
+A modern waitlist application built with React, TypeScript, and SQLite, featuring user authentication, referral systems, and a beautiful UI with shadcn/ui components.
 
-## 🚀 Live Demo
+## 🚀 Features
 
-**Production URL**: [https://lovable.dev/projects/1bc6f77b-a3ef-492d-8429-a67644ce6d68](https://lovable.dev/projects/1bc6f77b-a3ef-492d-8429-a67644ce6d68)
+- **Modern UI**: Built with React, TypeScript, and Tailwind CSS
+- **Beautiful Design**: Stunning gradient backgrounds and smooth animations
+- **User Authentication**: Simple login system using localStorage
+- **Referral System**: Track referrals and earn points
+- **Leaderboard**: Real-time leaderboard with user rankings
+- **Rewards System**: Earn points and unlock rewards
+- **Responsive Design**: Works perfectly on all devices
+- **Real-time Updates**: Live data synchronization with polling
+- **Share Functionality**: Easy social media sharing
+- **Progress Tracking**: Visual progress indicators
+- **Mobile Optimized**: Touch-friendly interface
 
-## 📋 Table of Contents
+## 🛠️ Tech Stack
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-- [Environment Setup](#environment-setup)
-- [Development](#development)
-- [Database Setup](#database-setup)
-- [Deployment](#deployment)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-
-## ✨ Features
-
-- **Modern UI/UX**: Beautiful, responsive design with dark theme
-- **User Authentication**: Secure login/signup with Supabase Auth
-- **Waitlist Management**: Collect and manage early access signups
-- **Referral System**: Track user referrals and rewards
-- **Dashboard**: User dashboard with progress tracking
-- **Social Proof**: Display testimonials and user counts
-- **Mobile Responsive**: Optimized for all device sizes
-- **Real-time Updates**: Live data synchronization with Supabase
-
-## 🛠 Tech Stack
-
-### Frontend
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
-- **Tailwind CSS** - Styling
-- **shadcn/ui** - UI component library
-- **React Router** - Client-side routing
-- **React Hook Form** - Form management
-- **Zod** - Schema validation
-
-### Backend & Services
-- **Supabase** - Backend as a Service (Database, Auth, Real-time)
-- **Netlify** - Hosting and deployment
-
-### Development Tools
-- **ESLint** - Code linting
-- **PostCSS** - CSS processing
-- **Autoprefixer** - CSS vendor prefixes
-
-## 📋 Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js** (v18 or higher) - [Download here](https://nodejs.org/)
-- **npm** or **yarn** or **bun** - Package managers
-- **Git** - Version control
-
-## 🚀 Getting Started
-
-### 1. Clone the Repository
-
-```bash
-git clone <YOUR_REPOSITORY_URL>
-cd stratawaitlist
-```
-
-### 2. Install Dependencies
-
-```bash
-# Using npm
-npm install
-
-# Using yarn
-yarn install
-
-# Using bun
-bun install
-```
-
-### 3. Environment Setup
-
-Create a `.env.local` file in the root directory:
-
-```bash
-# API Configuration (optional - defaults to localhost:3001)
-VITE_API_URL=http://localhost:3001/api
-```
-
-### 4. Start Development Server
-
-```bash
-# Using npm
-npm run dev
-
-# Using yarn
-yarn dev
-
-# Using bun
-bun dev
-```
-
-The application will be available at `http://localhost:5173`
-
-## 🔧 Development
-
-### Available Scripts
-
-```bash
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Build for development
-npm run build:dev
-
-# Preview production build
-npm run preview
-
-# Lint code
-npm run lint
-```
-
-### Code Structure
-
-```
-src/
-├── components/          # Reusable UI components
-│   ├── ui/             # shadcn/ui components
-│   └── waitlist/       # Waitlist-specific components
-├── hooks/              # Custom React hooks
-├── integrations/       # Third-party integrations
-│   └── supabase/       # Supabase client and types
-├── lib/                # Utility functions and configurations
-├── pages/              # Page components
-└── App.tsx             # Main application component
-```
-
-## 🗄 Database Setup
-
-This project uses SQLite as the backend database. The database is automatically initialized when you run the server.
-
-### Database Configuration
-
-- **Database Type**: SQLite (file-based)
-- **Database File**: `server/waitlist.db`
-- **Tables**: Automatically created on first run
-
-### Database Tables
-
-The application uses the following SQLite tables:
-- `waitlist` - Waitlist entries and user information
-- `profiles` - User profile information (if needed)
-- `referral_rewards` - Available referral rewards
-- `user_achievements` - User achievement tracking
-
-### API Endpoints
-
-The application includes a REST API with the following endpoints:
-- `POST /api/waitlist` - Create new waitlist entry
-- `GET /api/waitlist/:id` - Get waitlist entry by ID
-- `GET /api/waitlist/email/:email` - Get waitlist entry by email
-- `GET /api/leaderboard` - Get leaderboard data
-- `GET /api/rewards` - Get available rewards
-- `PATCH /api/waitlist/:id` - Update waitlist entry
-
-## 🚀 Deployment
-
-### Option 1: Deploy to EC2 with Apache (Recommended)
-
-See the detailed deployment guide in [DEPLOYMENT.md](./DEPLOYMENT.md) for step-by-step instructions on deploying to an EC2 instance with Apache.
-
-### Option 2: Deploy with Netlify (Frontend Only)
-
-1. **Connect to Netlify**:
-   - Push your code to GitHub
-   - Connect your repository to Netlify
-   - Set build command: `npm run build`
-   - Set publish directory: `dist`
-
-2. **Environment Variables**:
-   Add the following environment variables in Netlify:
-   ```
-   VITE_API_URL=https://your-api-domain.com/api
-   ```
-
-3. **Deploy**:
-   - Netlify will automatically deploy on every push to main branch
-   - Manual deployments can be triggered from the Netlify dashboard
-
-### Option 3: Local Development
-
-```bash
-# Start the backend server
-cd server
-npm install
-npm run init-db
-npm start
-
-# In another terminal, start the frontend
-npm install
-npm run dev
-```
+- **Frontend**: React 18, TypeScript, Vite
+- **UI Components**: shadcn/ui, Tailwind CSS
+- **State Management**: React Query (TanStack Query)
+- **Backend**: Express.js, Node.js
+- **Database**: SQLite (file-based)
+- **Deployment**: EC2, Apache, PM2
+- **Security**: Helmet, CORS, Rate Limiting
 
 ## 📁 Project Structure
 
 ```
 stratawaitlist/
-├── public/                 # Static assets
 ├── src/
-│   ├── components/         # React components
-│   │   ├── ui/            # shadcn/ui components
-│   │   └── waitlist/      # Waitlist-specific components
-│   ├── hooks/             # Custom React hooks
-│   ├── integrations/      # Third-party integrations
-│   ├── lib/               # Utilities and configurations
-│   ├── pages/             # Page components
-│   ├── App.tsx            # Main app component
-│   └── main.tsx           # App entry point
-├── supabase/              # Supabase configuration
-├── netlify.toml           # Netlify deployment config
-├── tailwind.config.ts     # Tailwind CSS configuration
-├── vite.config.ts         # Vite configuration
-└── package.json           # Dependencies and scripts
+│   ├── components/          # React components
+│   │   ├── ui/             # shadcn/ui components
+│   │   └── waitlist/       # Waitlist-specific components
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # Utility functions and API client
+│   ├── pages/              # Page components
+│   └── main.tsx           # Application entry point
+├── server/                 # Backend Express.js server
+│   ├── server.js          # Main server file
+│   ├── database.js        # SQLite database wrapper
+│   ├── init-db.js         # Database initialization
+│   └── package.json       # Backend dependencies
+├── public/                 # Static assets
+├── deploy.sh              # Deployment script
+├── dev.sh                 # Development setup script
+└── README.md              # This file
 ```
 
-## 🔧 Configuration Files
+## 🚀 Quick Start
 
-### Netlify Configuration (`netlify.toml`)
-```toml
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+### Prerequisites
+
+- Node.js 18+ and npm
+- Git
+
+### Development Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd stratawaitlist
+   ```
+
+2. **Install frontend dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Install backend dependencies**
+   ```bash
+   cd server
+   npm install
+   cd ..
+   ```
+
+4. **Initialize the database**
+   ```bash
+   cd server
+   npm run init-db
+   cd ..
+   ```
+
+5. **Start the development servers**
+   ```bash
+   # Option 1: Use the development script
+   ./dev.sh
+   
+   # Option 2: Start manually
+   # Terminal 1 - Backend
+   cd server && npm run dev
+   
+   # Terminal 2 - Frontend
+   npm run dev
+   ```
+
+6. **Open your browser**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:3001
+
+## 🏗️ Architecture
+
+### Frontend (React + TypeScript)
+- **React 18**: Modern React with hooks and functional components
+- **TypeScript**: Type-safe development
+- **Vite**: Fast build tool and development server
+- **React Query**: Server state management and caching
+- **shadcn/ui**: Beautiful, accessible UI components
+- **Tailwind CSS**: Utility-first CSS framework
+
+### Backend (Express.js + SQLite)
+- **Express.js**: Fast, unopinionated web framework
+- **SQLite**: Lightweight, file-based database
+- **CORS**: Cross-origin resource sharing
+- **Helmet**: Security headers
+- **Rate Limiting**: API protection
+- **UUID**: Unique identifier generation
+
+### Database Schema
+
+#### Waitlist Table
+```sql
+CREATE TABLE waitlist (
+  id TEXT PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  referral_count INTEGER DEFAULT 0,
+  points INTEGER DEFAULT 0,
+  tier_level INTEGER DEFAULT 1,
+  referral_link TEXT UNIQUE,
+  referred_by TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  last_referral_at DATETIME,
+  FOREIGN KEY (referred_by) REFERENCES waitlist (id)
+);
 ```
-This ensures proper routing for the SPA.
 
-### Supabase Configuration (`supabase/config.toml`)
-```toml
-project_id = "xnjcoexivndpcmjapzbl"
+#### Profiles Table
+```sql
+CREATE TABLE profiles (
+  id TEXT PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  first_name TEXT,
+  last_name TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
-## 🤝 Contributing
+#### Referral Rewards Table
+```sql
+CREATE TABLE referral_rewards (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  points_required INTEGER NOT NULL,
+  reward_type TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
+#### User Achievements Table
+```sql
+CREATE TABLE user_achievements (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  achievement_type TEXT NOT NULL,
+  points_earned INTEGER NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES waitlist (id)
+);
+```
 
-### Development Guidelines
+## 🌐 API Endpoints
 
-- Follow TypeScript best practices
-- Use ESLint for code quality
-- Write meaningful commit messages
-- Test your changes locally before pushing
+### Waitlist Management
+- `POST /api/waitlist` - Create new waitlist entry
+- `GET /api/waitlist/email/:email` - Get entry by email
+- `GET /api/waitlist/:id` - Get entry by ID
+- `PATCH /api/waitlist/:id` - Update entry
 
-## 📝 Environment Variables
+### Leaderboard
+- `GET /api/leaderboard` - Get leaderboard data
+
+### Rewards & Achievements
+- `GET /api/rewards` - Get available rewards
+- `GET /api/users/:userId/achievements` - Get user achievements
+- `POST /api/users/:userId/achievements` - Create achievement
+
+### Health Check
+- `GET /api/health` - Server health status
+
+## 🚀 Deployment
+
+### Automated Deployment (EC2)
+
+1. **Prepare your EC2 instance**
+   - Ubuntu 20.04+ recommended
+   - At least 1GB RAM
+   - Open ports 80 (HTTP) and 443 (HTTPS)
+
+2. **Run the deployment script**
+   ```bash
+   # Upload the script to your EC2 instance
+   scp deploy.sh ubuntu@your-ec2-ip:/home/ubuntu/
+   
+   # SSH into your EC2 instance
+   ssh ubuntu@your-ec2-ip
+   
+   # Make the script executable and run it
+   chmod +x deploy.sh
+   ./deploy.sh
+   ```
+
+### Manual Deployment
+
+1. **Install dependencies on EC2**
+   ```bash
+   sudo apt update
+   sudo apt install -y nodejs npm apache2
+   sudo npm install -g pm2
+   ```
+
+2. **Copy application files**
+   ```bash
+   # Copy frontend build to Apache
+   sudo cp -r dist/* /var/www/html/
+   
+   # Copy backend to /opt/strata-waitlist/
+   sudo mkdir -p /opt/strata-waitlist
+   sudo cp -r server/* /opt/strata-waitlist/
+   ```
+
+3. **Configure Apache proxy**
+   ```bash
+   sudo a2enmod proxy
+   sudo a2enmod proxy_http
+   sudo systemctl restart apache2
+   ```
+
+4. **Start the backend**
+   ```bash
+   cd /opt/strata-waitlist
+   npm install
+   npm run init-db
+   pm2 start server.js --name "strata-waitlist"
+   pm2 save
+   pm2 startup
+   ```
+
+## 🔧 Configuration
+
+### Environment Variables
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `VITE_SUPABASE_URL` | Supabase project URL | Yes |
-| `VITE_SUPABASE_ANON_KEY` | Supabase anonymous key | Yes |
+| `VITE_API_URL` | Backend API URL | No (defaults to localhost:3001) |
+| `PORT` | Backend server port | No (defaults to 3001) |
 
-## 🔍 Troubleshooting
+### Database Configuration
+
+The SQLite database is automatically created in the `server/` directory as `waitlist.db`. No additional configuration is required.
+
+## 🐛 Troubleshooting
 
 ### Common Issues
 
-1. **Build Errors**: Ensure all dependencies are installed with `npm install`
-2. **Supabase Connection**: Verify environment variables are set correctly
-3. **Routing Issues**: Check that `netlify.toml` is configured properly
-4. **TypeScript Errors**: Run `npm run lint` to identify issues
+1. **Build Errors**
+   - Ensure all dependencies are installed: `npm install`
+   - Clear cache: `npm run build -- --force`
 
-### Getting Help
+2. **API Connection Issues**
+   - Verify the backend server is running: `curl http://localhost:3001/api/health`
+   - Check CORS configuration in `server/server.js`
 
-- Check the [Supabase Documentation](https://supabase.com/docs)
-- Review [Vite Documentation](https://vitejs.dev/)
-- Consult [shadcn/ui Documentation](https://ui.shadcn.com/)
+3. **Database Issues**
+   - Reinitialize the database: `cd server && npm run init-db`
+   - Check file permissions on `waitlist.db`
+
+4. **Deployment Issues**
+   - Check Apache error logs: `sudo tail -f /var/log/apache2/error.log`
+   - Check PM2 logs: `pm2 logs strata-waitlist`
+   - Verify firewall settings
+
+### Development Tips
+
+- Use the `dev.sh` script for easy local development
+- The backend API runs on port 3001 by default
+- Frontend development server runs on port 5173
+- Database file is created in `server/waitlist.db`
+
+## 📚 Resources
+
+- [React Documentation](https://react.dev/)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Express.js Guide](https://expressjs.com/)
+- [SQLite Documentation](https://www.sqlite.org/docs.html)
+- [shadcn/ui Components](https://ui.shadcn.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Make your changes
+4. Test thoroughly
+5. Commit your changes: `git commit -m 'Add feature'`
+6. Push to the branch: `git push origin feature-name`
+7. Submit a pull request
 
 ## 📄 License
 
@@ -289,6 +318,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🙏 Acknowledgments
 
 - [shadcn/ui](https://ui.shadcn.com/) for the beautiful UI components
-- [Supabase](https://supabase.com/) for the backend infrastructure
 - [Vite](https://vitejs.dev/) for the fast build tool
+- [React Query](https://tanstack.com/query) for server state management
 - [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { apiClient } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
 export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
@@ -14,27 +14,13 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const generateConsistentPassword = (email: string, firstName: string, lastName: string) => {
-    return btoa(`${email}:${firstName}:${lastName}`).slice(0, 32);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // First check if user exists in waitlist
-      const { data: waitlistUser, error: waitlistError } = await supabase
-        .from("waitlist")
-        .select()
-        .eq("email", email)
-        .eq("first_name", firstName)
-        .eq("last_name", lastName)
-        .maybeSingle();
-
-      if (waitlistError) {
-        throw waitlistError;
-      }
+      // Check if user exists in waitlist using our API
+      const waitlistUser = await apiClient.getWaitlistEntryByEmail(email);
 
       if (!waitlistUser) {
         toast({
@@ -47,41 +33,15 @@ export const LoginForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         return;
       }
 
-      // Generate consistent password
-      const password = generateConsistentPassword(email, firstName, lastName);
-
-      // Try to sign in
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (signInError) {
-        // If sign in fails, try to sign up
-        const { error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              waitlist_id: waitlistUser.id,
-              first_name: firstName,
-              last_name: lastName
-            }
-          }
+      // Verify the name matches
+      if (waitlistUser.first_name !== firstName || waitlistUser.last_name !== lastName) {
+        toast({
+          variant: "destructive",
+          title: "Invalid Information",
+          description: "The provided information doesn't match our records.",
+          className: "bg-black text-white border border-[#9b87f5]/20",
         });
-
-        if (signUpError) {
-          if (signUpError.status === 429) {
-            toast({
-              variant: "destructive",
-              title: "Too Many Attempts",
-              description: "Please wait a moment before trying again.",
-              className: "bg-black text-white border border-[#9b87f5]/20",
-            });
-            return;
-          }
-          throw signUpError;
-        }
+        return;
       }
 
       // Store waitlist info

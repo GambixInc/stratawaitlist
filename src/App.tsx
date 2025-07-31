@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
@@ -22,26 +21,8 @@ function App() {
   const { toast } = useToast();
 
   useEffect(() => {
-    console.log("Setting up auth state change listener");
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth state changed in App:", event, !!session);
-      if (event === 'SIGNED_IN') {
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in.",
-        });
-      } else if (event === 'SIGNED_OUT') {
-        toast({
-          title: "Signed out",
-          description: "You have been signed out successfully.",
-        });
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [toast]);
+    console.log("App component mounted");
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -66,34 +47,37 @@ function App() {
 
 // Protected Route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<any>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Checking session in ProtectedRoute");
-    // Check current session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("Session check result:", !!session);
-      setSession(session);
+    console.log("Checking authentication in ProtectedRoute");
+    // Check if user is authenticated via localStorage
+    const checkAuth = () => {
+      const waitlistId = localStorage.getItem('waitlist_id');
+      const email = localStorage.getItem('waitlist_email');
+      const isAuth = !!(waitlistId && email);
+      setIsAuthenticated(isAuth);
       setLoading(false);
-    });
+    };
+    
+    checkAuth();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("Auth state changed in ProtectedRoute:", !!session);
-      setSession(session);
-      setLoading(false);
-    });
+    // Listen for storage changes
+    const handleStorageChange = () => {
+      checkAuth();
+    };
 
-    return () => subscription.unsubscribe();
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (!session) {
-    console.log("No session found, redirecting to home");
+  if (!isAuthenticated) {
+    console.log("No authentication found, redirecting to home");
     return <Navigate to="/" replace />;
   }
 

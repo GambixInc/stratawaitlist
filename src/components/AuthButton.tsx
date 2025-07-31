@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { LoginForm } from "./LoginForm";
-import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
 export const AuthButton = () => {
@@ -13,16 +12,16 @@ export const AuthButton = () => {
   const { toast } = useToast();
   
   useEffect(() => {
-    // Check initial session
-    const checkSession = async () => {
-      console.log("Checking initial session");
-      const { data: { session } } = await supabase.auth.getSession();
-      console.log("Initial session check:", !!session);
-      setIsAuthenticated(!!session);
+    // Check if user is authenticated via localStorage
+    const checkAuth = () => {
+      const waitlistId = localStorage.getItem('waitlist_id');
+      const email = localStorage.getItem('waitlist_email');
+      const isAuth = !!(waitlistId && email);
+      setIsAuthenticated(isAuth);
       
       // If we're on the dashboard and not authenticated, redirect to home
-      if (!session && window.location.pathname === '/dashboard') {
-        console.log("No session found on dashboard, redirecting to home");
+      if (!isAuth && window.location.pathname === '/dashboard') {
+        console.log("No authentication found on dashboard, redirecting to home");
         navigate('/');
         toast({
           title: "Session expired",
@@ -32,43 +31,31 @@ export const AuthButton = () => {
       }
     };
     
-    checkSession();
+    checkAuth();
 
-    // Subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth state changed:", event, !!session);
-      setIsAuthenticated(!!session);
-      
-      if (event === 'SIGNED_OUT') {
-        console.log("User signed out, navigating to home");
-        navigate('/');
-        toast({
-          title: "Logged out",
-          description: "You have been successfully logged out.",
-          className: "bg-black text-white border border-brand/20",
-        });
-      } else if (event === 'SIGNED_IN') {
-        console.log("User signed in, navigating to dashboard");
-        navigate('/dashboard');
-        toast({
-          title: "Welcome back!",
-          description: "You have been successfully logged in.",
-          className: "bg-black text-white border border-brand/20",
-        });
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
+    // Listen for storage changes
+    const handleStorageChange = () => {
+      checkAuth();
     };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [navigate, toast]);
 
   const handleLogout = async () => {
     try {
       console.log("Initiating logout");
-      await supabase.auth.signOut();
+      localStorage.removeItem('waitlist_id');
+      localStorage.removeItem('waitlist_email');
+      localStorage.removeItem('first_name');
+      localStorage.removeItem('last_name');
       setIsAuthenticated(false);
-      window.location.reload(); // Refresh the page after logout
+      navigate('/');
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+        className: "bg-black text-white border border-brand/20",
+      });
     } catch (error) {
       console.error('Error logging out:', error);
       toast({
@@ -98,7 +85,6 @@ export const AuthButton = () => {
             <LoginForm onSuccess={() => {
               setShowLoginForm(false);
               setIsAuthenticated(true);
-              window.location.reload(); // Refresh the page after successful login
             }} />
           </div>
         </DialogContent>

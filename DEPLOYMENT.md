@@ -21,11 +21,13 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 ### Option 1: Automated Deployment Script
 
 1. **Upload files to EC2 instance:**
+
    ```bash
    scp -r . ec2-user@your-ec2-ip:/home/ec2-user/strata-waitlist
    ```
 
 2. **SSH into your EC2 instance:**
+
    ```bash
    ssh ec2-user@your-ec2-ip
    ```
@@ -40,37 +42,39 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
 ### Option 2: Manual Deployment
 
 1. **Install dependencies:**
+
    ```bash
    # Update system
    sudo yum update -y
-   
+
    # Install Node.js
    curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
    sudo yum install -y nodejs
-   
+
    # Install Apache
    sudo yum install -y httpd
    sudo systemctl start httpd
    sudo systemctl enable httpd
-   
+
    # Install PM2
    sudo npm install -g pm2
    ```
 
 2. **Set up the application:**
+
    ```bash
    # Create application directory
    sudo mkdir -p /var/www/strata-waitlist
    sudo chown -R ec2-user:ec2-user /var/www/strata-waitlist
-   
+
    # Copy files
    cp -r . /var/www/strata-waitlist/
    cd /var/www/strata-waitlist
-   
+
    # Install frontend dependencies and build
    npm install
    npm run build
-   
+
    # Install server dependencies
    cd server
    npm install
@@ -78,6 +82,7 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
    ```
 
 3. **Configure PM2:**
+
    ```bash
    # Create PM2 ecosystem file
    cat > ecosystem.config.js << 'EOF'
@@ -97,7 +102,7 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
      }]
    };
    EOF
-   
+
    # Start server
    pm2 start ecosystem.config.js
    pm2 save
@@ -105,20 +110,21 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
    ```
 
 4. **Configure Apache:**
+
    ```bash
    # Create Apache configuration
    sudo tee /etc/httpd/conf.d/strata-waitlist.conf > /dev/null << 'EOF'
    DocumentRoot "/var/www/strata-waitlist/dist"
-   
+
    ProxyPreserveHost On
    ProxyPass /api http://localhost:3001/api
    ProxyPassReverse /api http://localhost:3001/api
-   
+
    <Directory "/var/www/strata-waitlist/dist">
        Options Indexes FollowSymLinks
        AllowOverride All
        Require all granted
-       
+
        RewriteEngine On
        RewriteBase /
        RewriteRule ^index\.html$ - [L]
@@ -126,12 +132,12 @@ This guide explains how to deploy the Strata Waitlist application on an EC2 inst
        RewriteCond %{REQUEST_FILENAME} !-d
        RewriteRule . /index.html [L]
    </Directory>
-   
+
    LoadModule proxy_module modules/mod_proxy.so
    LoadModule proxy_http_module modules/mod_proxy_http.so
    LoadModule rewrite_module modules/mod_rewrite.so
    EOF
-   
+
    # Set permissions and restart
    sudo chown -R apache:apache /var/www/strata-waitlist/dist
    sudo chmod -R 755 /var/www/strata-waitlist/dist
@@ -242,6 +248,7 @@ sqlite3 /var/www/strata-waitlist/server/waitlist.db
 ### Common Issues
 
 1. **Server not starting:**
+
    ```bash
    pm2 logs strata-waitlist-server
    cd /var/www/strata-waitlist/server
@@ -249,12 +256,14 @@ sqlite3 /var/www/strata-waitlist/server/waitlist.db
    ```
 
 2. **Apache not serving files:**
+
    ```bash
    sudo systemctl status httpd
    sudo tail -f /var/log/httpd/error_log
    ```
 
 3. **Database issues:**
+
    ```bash
    cd /var/www/strata-waitlist/server
    npm run init-db
@@ -295,18 +304,21 @@ For higher traffic:
 To update the application:
 
 1. **Pull new code:**
+
    ```bash
    cd /var/www/strata-waitlist
    git pull origin main
    ```
 
 2. **Rebuild frontend:**
+
    ```bash
    npm install
    npm run build
    ```
 
 3. **Update server:**
+
    ```bash
    cd server
    npm install
@@ -321,7 +333,8 @@ To update the application:
 ## 📞 Support
 
 For issues or questions:
+
 - Check logs: `pm2 logs` and Apache logs
 - Verify configuration files
 - Test API endpoints: `curl http://localhost:3001/api/health`
-- Check database: `sqlite3 waitlist.db .tables` 
+- Check database: `sqlite3 waitlist.db .tables`
