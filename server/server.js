@@ -3,6 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const database = require("./database");
+const dynamoDB = require("./dynamodb");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -40,8 +41,23 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Health check endpoint
-app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", timestamp: new Date().toISOString() });
+app.get("/api/health", async (req, res) => {
+  try {
+    // Test DynamoDB connection
+    const dynamoDBStatus = await dynamoDB.testConnection();
+
+    res.json({
+      status: "OK",
+      timestamp: new Date().toISOString(),
+      dynamodb: dynamoDBStatus ? "connected" : "disconnected",
+    });
+  } catch (error) {
+    res.json({
+      status: "OK",
+      timestamp: new Date().toISOString(),
+      dynamodb: "error",
+    });
+  }
 });
 
 // Waitlist endpoints
@@ -95,6 +111,23 @@ app.post("/api/waitlist", async (req, res) => {
     };
 
     const newEntry = await database.createWaitlistEntry(userData);
+
+    // Also save to DynamoDB (non-blocking)
+    try {
+      await dynamoDB.createWaitlistEntry({
+        ...newEntry,
+        source: req.body.source || "direct",
+        utm_source: req.body.utm_source || null,
+        utm_medium: req.body.utm_medium || null,
+        utm_campaign: req.body.utm_campaign || null,
+      });
+    } catch (dynamoError) {
+      console.error(
+        "⚠️ DynamoDB save failed (continuing with SQLite):",
+        dynamoError
+      );
+      // Continue with the response even if DynamoDB fails
+    }
 
     res.status(201).json({
       message: "Successfully joined waitlist",
