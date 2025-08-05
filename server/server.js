@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const database = require("./database");
 const dynamoDB = require("./dynamodb");
+const mailerLite = require("./mailerlite");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -46,16 +47,21 @@ app.get("/api/health", async (req, res) => {
     // Test DynamoDB connection
     const dynamoDBStatus = await dynamoDB.testConnection();
 
+    // Test MailerLite connection
+    const mailerLiteStatus = await mailerLite.testConnection();
+
     res.json({
       status: "OK",
       timestamp: new Date().toISOString(),
       dynamodb: dynamoDBStatus ? "connected" : "disconnected",
+      mailerlite: mailerLiteStatus.success ? "connected" : "disconnected",
     });
   } catch (error) {
     res.json({
       status: "OK",
       timestamp: new Date().toISOString(),
       dynamodb: "error",
+      mailerlite: "error",
     });
   }
 });
@@ -127,6 +133,25 @@ app.post("/api/waitlist", async (req, res) => {
         dynamoError
       );
       // Continue with the response even if DynamoDB fails
+    }
+
+    // Add to MailerLite (non-blocking)
+    try {
+      const groupId = process.env.MAILERLITE_GROUP_ID || null;
+      if (groupId) {
+        await mailerLite.addSubscriberToGroup(
+          email,
+          first_name,
+          last_name,
+          groupId
+        );
+      }
+    } catch (mailerLiteError) {
+      console.error(
+        "⚠️ MailerLite integration failed (continuing with database save):",
+        mailerLiteError
+      );
+      // Continue with the response even if MailerLite fails
     }
 
     res.status(201).json({
@@ -290,6 +315,147 @@ app.patch("/api/waitlist/:id", async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating user:", error);
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+});
+
+// MailerLite endpoints
+app.get("/api/mailerlite/groups", async (req, res) => {
+  try {
+    const result = await mailerLite.getGroups();
+
+    if (result.success) {
+      res.json({
+        groups: result.data.data || [],
+        message: result.message,
+      });
+    } else {
+      res.status(500).json({
+        error: "Failed to get groups",
+        message: result.message,
+      });
+    }
+  } catch (error) {
+    console.error("Error getting MailerLite groups:", error);
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+});
+
+app.post("/api/mailerlite/groups", async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({
+        error: "Missing required field: name",
+      });
+    }
+
+    const result = await mailerLite.createGroup(name);
+
+    if (result.success) {
+      res.status(201).json({
+        group: result.data,
+        message: result.message,
+      });
+    } else {
+      res.status(500).json({
+        error: "Failed to create group",
+        message: result.message,
+      });
+    }
+  } catch (error) {
+    console.error("Error creating MailerLite group:", error);
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+});
+
+app.get("/api/mailerlite/subscribers/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    const result = await mailerLite.getSubscriber(email);
+
+    if (result.success) {
+      res.json({
+        subscriber: result.data,
+        message: result.message,
+      });
+    } else if (result.error === "SUBSCRIBER_NOT_FOUND") {
+      res.status(404).json({
+        error: "Subscriber not found",
+        message: result.message,
+      });
+    } else {
+      res.status(500).json({
+        error: "Failed to get subscriber",
+        message: result.message,
+      });
+    }
+  } catch (error) {
+    console.error("Error getting MailerLite subscriber:", error);
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+});
+
+app.put("/api/mailerlite/subscribers/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    const updateData = req.body;
+
+    const result = await mailerLite.updateSubscriber(email, updateData);
+
+    if (result.success) {
+      res.json({
+        subscriber: result.data,
+        message: result.message,
+      });
+    } else {
+      res.status(500).json({
+        error: "Failed to update subscriber",
+        message: result.message,
+      });
+    }
+  } catch (error) {
+    console.error("Error updating MailerLite subscriber:", error);
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+});
+
+app.post("/api/mailerlite/campaigns", async (req, res) => {
+  try {
+    const { groupId, subject, content } = req.body;
+
+    if (!groupId || !subject || !content) {
+      return res.status(400).json({
+        error: "Missing required fields: groupId, subject, content",
+      });
+    }
+
+    const result = await mailerLite.sendCampaign(groupId, subject, content);
+
+    if (result.success) {
+      res.status(201).json({
+        campaign: result.data,
+        message: result.message,
+      });
+    } else {
+      res.status(500).json({
+        error: "Failed to create campaign",
+        message: result.message,
+      });
+    }
+  } catch (error) {
+    console.error("Error creating MailerLite campaign:", error);
     res.status(500).json({
       error: "Internal server error",
     });
